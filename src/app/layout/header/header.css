@@ -13,3 +13,11 @@
 .animate-slide-down {
   animation: slide-down 0.5s ease-out;
 }
+
+.navbar{
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: env(safe-area-inset-top); /* iOS notch / status bar */
+  background-color: white; /* ensure content behind header is not visible */
+}

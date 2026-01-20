@@ -1,0 +1,55 @@
+<div class="gifts-section">
+  <h2 class="section-title">{{ title }}</h2>
+  
+  <div class="carousel-wrapper">
+    <!-- Left Arrow -->
+    <button 
+      class="arrow-btn left-arrow" 
+      (click)="scrollLeft()"
+      [class.hidden]="!showLeftArrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+
+    <!-- Gifts Container -->
+    <div 
+      class="gifts-container" 
+      #giftsContainer
+      (scroll)="updateArrowVisibility()">
+      <div class="gift-card" *ngFor="let gift of gifts">
+        <!-- Gifts Image -->
+        <div class="gift-image" [ngClass]="gift.imageUrl">
+          <button 
+            class="favorite-btn" 
+            (click)="toggleFavorite(gift)"
+            [class.active]="gift.isFavorite">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </button>
+          <div class="duration-badge">{{ gift.price }}</div>
+        </div>
+        
+        <!-- Gift Info -->
+        <div class="gift-info">
+          <button class="buy-btn" (click)="buyGift(gift)">
+            <div class="btn-text">
+              Add to Cart
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Arrow -->
+    <button 
+      class="arrow-btn right-arrow" 
+      (click)="scrollRight()"
+      [class.hidden]="!showRightArrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+</div>

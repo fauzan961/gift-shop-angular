@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+body{
+    overflow-x: hidden;
+}
+
+.section-title {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 1.2rem; /* default for small screens */
+}
+
+.btn-text {
+  font-size: 0.75rem;
+}
+
+/* Medium devices (sm ≥ 640px) */
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+    .btn-text {
+     font-size: 0.9rem;
+    }
+}
+
+/* Large devices (lg ≥ 1024px) */
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+    .btn-text {
+     font-size: 1rem;
+    }
+}
+
+/* Extra Large devices (xl ≥ 1280px) */
+@media (min-width: 1280px) {
+  .section-title {
+    font-size: 2rem;
+  }
+}
