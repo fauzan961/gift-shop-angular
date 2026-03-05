@@ -1,0 +1,107 @@
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
+      <!-- Title -->
+  <h1 class="text-3xl font-bold mb-8">Your Cart</h1>
+
+  <div class="grid lg:grid-cols-3 gap-8">
+
+    <!-- Cart Items -->
+    <div class="lg:col-span-2 space-y-6">
+
+      <!-- Item -->
+      <div class="flex gap-5 border rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+
+        <!-- Image -->
+        <img src="https://via.placeholder.com/120"
+             class="w-28 h-28 object-cover rounded-xl"/>
+
+        <!-- Info -->
+        <div class="flex-1 flex flex-col justify-between">
+
+          <!-- Top -->
+          <div>
+            <h2 class="font-semibold text-lg">Rose Bouquet</h2>
+            <p class="text-gray-500 text-sm">Premium flowers collection</p>
+          </div>
+
+          <!-- Bottom -->
+          <div class="flex items-center justify-between mt-3">
+
+            <!-- Quantity -->
+            <div class="flex items-center border rounded-lg overflow-hidden">
+
+              <button class="px-3 py-1 text-lg hover:bg-gray-100 cursor-pointer">−</button>
+              <span class="px-4 font-medium">1</span>
+              <button class="px-3 py-1 text-lg hover:bg-gray-100 cursor-pointer">+</button>
+
+            </div>
+
+            <!-- Price -->
+            <p class="max-[400px]:hidden font-semibold text-lg">25.00 KD</p>
+
+            <!-- Remove -->
+            <button class="hidden sm:block text-red-500 hover:text-red-600 text-sm font-medium cursor-pointer">
+              Remove
+            </button>
+
+        </div>
+
+        <p class="min-[400px]:hidden font-semibold text-lg pt-2">25.00 KD</p>
+
+          <div class="sm:hidden text-red-500 hover:text-red-600 text-sm font-medium pt-2 cursor-pointer">
+            Remove
+          </div>
+        </div>
+      </div>
+      <!-- /Item -->
+
+
+      <!-- Duplicate items here dynamically -->
+    </div>
+
+
+
+    <!-- Summary Card -->
+    <div class="border rounded-2xl p-6 shadow-sm h-fit sticky top-24">
+
+      <h2 class="text-xl font-semibold mb-6">Order Summary</h2>
+
+      <div class="space-y-3 text-sm">
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Subtotal</span>
+          <span>$50.00</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Shipping</span>
+          <span>$5.00</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-500">Tax</span>
+          <span>$2.50</span>
+        </div>
+
+        <div class="border-t pt-4 flex justify-between font-semibold text-lg">
+          <span>Total</span>
+          <span>$57.50</span>
+        </div>
+
+      </div>
+
+      <!-- Checkout Button -->
+      <button
+        class="bg-[#6A1B4D] w-full mt-6 text-white py-3 rounded-xl font-medium
+               hover:bg-[#3B0F3D] transition cursor-pointer">
+        Proceed to Checkout
+      </button>
+
+      <!-- Continue shopping -->
+      <button class="w-full mt-3 text-sm text-gray-500 hover:underline cursor-pointer">
+        Continue Shopping
+      </button>
+
+    </div>
+
+  </div>
+</div>

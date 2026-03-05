@@ -1,0 +1,342 @@
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
+  <div class="max-[900px]:block hidden text-end pb-6">
+    <button (click)="toggleFilterModal()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-300 transition">
+      <!-- Funnel Filter Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" 
+          class="w-6 h-6 text-gray-700"
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor">
+        <path stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2"
+              d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 min-[900px]:grid-cols-4 gap-8 items-start pb-2">
+
+    <!-- Left Sidebar: Sort & Filters -->
+    <div class="min-[900px]:col-span-1 hidden min-[900px]:block bg-white p-5 rounded-3xl shadow-md space-y-6 sticky top-24">
+
+      <!-- Sort By -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Sort By</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
+            Latest
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
+            Price: Low to High
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
+            Price: High to Low
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter by Category -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Category</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Toys
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Gadgets
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Books
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter by Discount -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Discount</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            0-25%
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            25-50%
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            50% & Above
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter by Age -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Age</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            0-6 yrs
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            6-18 yrs
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            18+ yrs
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter by Gender -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Gender</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Men
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Women
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            Unisex
+          </label>
+        </div>
+      </div>
+
+      <!-- Filter by Price -->
+      <div>
+        <h2 class="font-semibold text-lg mb-3">Price</h2>
+        <div class="space-y-2">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            0-5 KWD
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            5-10 KWD
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            10-20 KWD
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
+            20 KWD+
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Products Grid -->
+    <div class="min-[900px]:col-span-3 col-span-1 grid gap-4 sm:gap-6 grid-cols-2 min-[900px]:grid-cols-3">
+      <!-- Example product card -->
+      @for(product of products; track product){
+        <div class="group bg-white rounded-3xl shadow-md hover:shadow-2xl transition duration-300 border border-gray-100 overflow-hidden">
+
+          <!-- Image -->
+          <div class="relative overflow-hidden">
+            <img [src]="product.image"
+                class="w-full h-42 sm:h-60 object-cover group-hover:scale-110 transition duration-500"/>
+            <span class="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full shadow">
+              {{ product.badge }}
+            </span>
+          </div>
+
+          <!-- Info -->
+          <div class="p-5">
+            <div class="min-h-[5rem]">
+              <h3 class="font-semibold text-lg text-gray-800 group-hover:text-black transition">
+                {{ product.name }}
+              </h3>
+              <div class="flex items-center gap-1 text-yellow-400 mt-2 text-sm">
+                ★ ★ ★ ★ ☆
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 mt-4">
+              <span class="text-xl font-bold text-gray-900">${{ product.price }}</span>
+              <span class="text-sm text-gray-400 line-through">${{ product.oldPrice }}</span>
+            </div>
+
+            <button class="cursor-pointer mt-5 w-full py-2.5 rounded-xl bg-[#6A1B4D] text-white font-medium hover:bg-[#3B0F3D] transition active:scale-95">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+<div
+  class="min-[900px]:hidden fixed inset-0 z-50 bg-black/50 flex justify-start transition-opacity duration-300 ease-in-out"
+  [class.opacity-0]="!showFilterModal"
+  [class.opacity-100]="showFilterModal"
+  [class.pointer-events-none]="!showFilterModal"
+  (click)="toggleFilterModal()"
+>
+  <div 
+    class="bg-white w-80 h-full p-6 overflow-y-auto relative transform transition-transform duration-500 ease-in-out"
+    [class.translate-x-full]="!showFilterModal"
+    [class.translate-x-0]="showFilterModal"
+    [class.opacity-0]="!showFilterModal"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Close Button -->
+    <div class="flex justify-end mb-4">
+      <button (click)="toggleFilterModal()" class="text-gray-500 hover:text-gray-900 text-2xl font-bold">
+        ✕
+      </button>
+    </div>
+
+    <!-- ================== Sections ================== -->
+
+    <!-- Sort By -->
+    <div class="border-b border-gray-300 pb-3 mb-3">
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('sort')">
+        <h2 class="font-semibold text-lg">Sort By</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.sort"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.sort ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Latest
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Price: Low to High
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Price: High to Low
+        </label>
+      </div>
+    </div>
+
+    <!-- Category -->
+    <div class="border-b border-gray-300 pb-3 mb-3">
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('category')">
+        <h2 class="font-semibold text-lg">Category</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.category"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.category ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Toys</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Gadgets</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Books</label>
+      </div>
+    </div>
+
+    <!-- Discount -->
+    <div class="border-b border-gray-300 pb-3 mb-3">
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('discount')">
+        <h2 class="font-semibold text-lg">Discount</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.discount"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.discount ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-25%</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 25-50%</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 50% & Above</label>
+      </div>
+    </div>
+
+    <!-- Age -->
+    <div class="border-b border-gray-300 pb-3 mb-3">
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('age')">
+        <h2 class="font-semibold text-lg">Age</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.age"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.age ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-6 yrs</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 6-18 yrs</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 18+ yrs</label>
+      </div>
+    </div>
+
+    <!-- Gender -->
+    <div class="border-b border-gray-300 pb-3 mb-3">
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('gender')">
+        <h2 class="font-semibold text-lg">Gender</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.gender"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.gender ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Men</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Women</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Unisex</label>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div>
+      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('price')">
+        <h2 class="font-semibold text-lg">Price</h2>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5 transform transition-transform duration-300"
+          [class.rotate-180]="collapse.price"
+          fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+      <div class="space-y-2 mt-2 overflow-hidden"
+           [style.maxHeight]="collapse.price ? '500px' : '0px'">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-5 KWD</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 5-10 KWD</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 10-20 KWD</label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 20 KWD+</label>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>

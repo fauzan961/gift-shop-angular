@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -8,6 +9,8 @@ import { Component } from '@angular/core';
   styleUrl: './header.css',
 })
 export class Header {
+  constructor(private router: Router){}
+
   cartItemCount = 0;
   isMobileMenuOpen = false;
 
@@ -22,8 +25,7 @@ export class Header {
   }
 
   onCartClick() {
-    console.log('Cart clicked');
-    // Navigate to cart page
+    this.router.navigate(['/cart']);
   }
 
   switchLanguage() {
