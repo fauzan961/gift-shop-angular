@@ -13,6 +13,8 @@ export class Header {
 
   cartItemCount = 0;
   isMobileMenuOpen = false;
+  isDropdownOpen = false;
+  isHovering = false;
 
   onSearch() {
     console.log('Search clicked');
@@ -37,5 +39,8 @@ export class Header {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
+  closeMobileMenu() {
+  this.isMobileMenuOpen = false;
+  }
 
 }

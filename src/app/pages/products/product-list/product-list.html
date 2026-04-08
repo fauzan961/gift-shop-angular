@@ -19,6 +19,14 @@
 
     <!-- Left Sidebar: Sort & Filters -->
     <div class="min-[900px]:col-span-1 hidden min-[900px]:block bg-white p-5 rounded-3xl shadow-md space-y-6 sticky top-24">
+      <div class="flex justify-end mb-1">
+        <button
+        (click)="clearAllFilters()"
+        class="text-sm text-[#6A1B4D] font-medium hover:underline cursor-pointer"
+      >
+        Clear All
+      </button>
+      </div>
 
       <!-- Sort By -->
       <div>
@@ -188,10 +196,10 @@
   (click)="toggleFilterModal()"
 >
   <div 
-    class="bg-white w-80 h-full p-6 overflow-y-auto relative transform transition-transform duration-500 ease-in-out"
+    class="bg-white w-80 h-full p-4 overflow-y-auto relative transform transition-transform duration-500 ease-in-out"
     [class.translate-x-full]="!showFilterModal"
     [class.translate-x-0]="showFilterModal"
-    [class.opacity-0]="!showFilterModal"
+    [class.opacity-0]="hideFilterModal"
     (click)="$event.stopPropagation()"
   >
     <!-- Close Button -->
@@ -202,6 +210,15 @@
     </div>
 
     <!-- ================== Sections ================== -->
+
+    <div class="flex justify-end mb-6">
+      <button
+      (click)="clearAllFilters()"
+      class="text-sm text-[#6A1B4D] font-medium hover:underline cursor-pointer"
+    >
+      Clear All
+    </button>
+    </div>
 
     <!-- Sort By -->
     <div class="border-b border-gray-300 pb-3 mb-3">

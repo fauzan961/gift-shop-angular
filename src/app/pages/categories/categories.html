@@ -1,0 +1,32 @@
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
+    <!-- Page Header -->
+    <div class="text-center mb-14">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">
+            Shop by Category
+        </h1>
+        <p class="text-gray-500 max-w-2xl mx-auto text-lg">
+            Browse our gift categories and find the perfect surprise for your loved ones.
+        </p>
+    </div>
+
+    <!-- Category Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-4">
+        @for (category of categories; track category.name) {
+            <div class="relative group cursor-pointer rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
+                
+                <!-- Image -->
+                <img 
+                    [src]="category.image"
+                    class="w-full h-60 object-cover rounded-3xl transition-transform duration-500 group-hover:scale-105"
+                >
+
+                <!-- Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <h3 class="text-white text-2xl font-bold text-center w-full">
+                        {{ category.name }}
+                    </h3>
+                </div>
+            </div>
+        }
+    </div>
+</div>

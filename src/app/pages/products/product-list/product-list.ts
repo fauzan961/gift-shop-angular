@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,8 +7,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
-export class ProductList {
+export class ProductList implements OnInit {
   showFilterModal:boolean = false;
+  hideFilterModal:boolean = true;
+
   products = [
   {
     name: 'Premium Headphones',
@@ -51,5 +53,15 @@ export class ProductList {
 
   toggleFilterModal(){
     this.showFilterModal = !this.showFilterModal;
+  }
+
+  clearAllFilters(){
+    console.log('CLEAR ALL FILTERS')
+  }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.hideFilterModal = false
+    }, 350);
   }
 }
