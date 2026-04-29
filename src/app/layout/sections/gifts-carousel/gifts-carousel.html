@@ -19,7 +19,7 @@
       (scroll)="updateArrowVisibility()">
       <div class="gift-card" *ngFor="let gift of gifts">
         <!-- Gifts Image -->
-        <div class="gift-image" [ngClass]="gift.imageUrl">
+        <div class="gift-image" (click)="productDetails()" [ngClass]="gift.imageUrl">
           <button 
             class="favorite-btn" 
             (click)="toggleFavorite(gift)"

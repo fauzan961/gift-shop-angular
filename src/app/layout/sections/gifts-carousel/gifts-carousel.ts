@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 interface Gift {
   id: number;
@@ -17,6 +18,7 @@ interface Gift {
   styleUrl: './gifts-carousel.css',
 })
 export class GiftsCarousel implements AfterViewInit{
+  constructor(private router: Router){}
   @ViewChild('giftsContainer') giftsContainer!: ElementRef;
   @Input() title: string = '';
   // @Input() gifts: any[] = [];
@@ -109,6 +111,10 @@ export class GiftsCarousel implements AfterViewInit{
   
     buyGift(gift: Gift): void {
       console.log('Buying gift:', gift.title);
+    }
+
+    productDetails(){
+      this.router.navigate(['/product/slug'])
     }
 
 }

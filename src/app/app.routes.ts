@@ -1,15 +1,12 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { Cart } from './pages/cart/cart';
-import { ProductList } from './pages/products/product-list/product-list';
-import { Occasion } from './pages/occasion/occasion';
-import { Categories } from './pages/categories/categories';
 
 export const routes: Routes = [
-    {path: '', component: Home},
-    {path: 'home', component: Home},
-    {path: 'cart', component: Cart},
-    {path: 'products', component: ProductList},
-    {path: 'occasion', component: Occasion},
-    {path: 'categories', component: Categories},
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', loadComponent: () => import('./pages/home/home').then(m => m.Home) },
+  { path: 'cart', loadComponent: () => import('./pages/cart/cart').then(m => m.Cart) },
+  { path: 'products', loadComponent: () => import('./pages/products/product-list/product-list').then(m => m.ProductList) },
+  { path: 'occasion', loadComponent: () => import('./pages/occasion/occasion').then(m => m.Occasion) },
+  { path: 'categories', loadComponent: () => import('./pages/categories/categories').then(m => m.Categories) },
+  { path: 'product/:slug', loadComponent: () => import('./pages/products/product-details/product-details').then(m => m.ProductDetails) },
+  { path: '**', redirectTo: 'home' }
 ];

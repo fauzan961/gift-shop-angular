@@ -1,10 +1,10 @@
 .categories-section{
-    padding: 2rem 0;
+    padding-top: 2rem;
 }
 
 @media (max-width: 768px) {
   .categories-section {
-    padding: 1rem 0;
+    padding-top: 1rem;
   }
 }
 
@@ -14,7 +14,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  padding: 1rem 0;
+  padding-top: 1rem;
 
   @media (min-width: 520px) {
     grid-template-columns: repeat(3, 1fr);
