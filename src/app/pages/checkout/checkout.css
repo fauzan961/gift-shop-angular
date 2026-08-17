@@ -1,0 +1,193 @@
+@reference "tailwindcss";
+
+.page {
+  @apply min-h-screen bg-gray-50 py-8 px-4;
+}
+
+.container {
+  @apply max-w-4xl mx-auto space-y-4;
+}
+
+.card {
+  @apply bg-white rounded-2xl border border-gray-200 p-6;
+}
+
+.card-header {
+  @apply flex items-center gap-3 mb-5 pb-4 border-b border-gray-100;
+}
+
+.card-icon {
+  @apply w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0;
+}
+
+.card-icon-blue {
+  @apply bg-blue-50 text-blue-600;
+}
+
+.card-icon-purple {
+  @apply bg-purple-50 text-purple-600;
+}
+
+.card-icon-amber {
+  @apply bg-amber-50 text-amber-600;
+}
+
+.card-icon-green {
+  @apply bg-green-50 text-green-600;
+}
+
+.card-icon i {
+  @apply text-lg;
+}
+
+.card-title {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.card-subtitle {
+  @apply text-xs text-gray-400 mt-0.5;
+}
+
+.field-grid {
+  @apply space-y-4;
+}
+
+.field-grid-2 {
+  @apply grid grid-cols-2 gap-3;
+}
+
+.field {
+  @apply flex flex-col gap-1.5;
+}
+
+.field label {
+  @apply text-xs font-medium text-gray-600;
+}
+
+.field-label-row {
+  @apply flex justify-between;
+}
+
+.char-count {
+  @apply text-xs text-gray-400;
+}
+
+.input {
+  @apply w-full px-3 py-2.5 text-sm rounded-lg border border-gray-200 bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:outline-none transition-all;
+}
+
+.input-blue {
+  @apply focus:border-blue-400 focus:ring-2 focus:ring-blue-50;
+}
+
+.input-purple {
+  @apply focus:border-purple-400 focus:ring-2 focus:ring-purple-50;
+}
+
+.input.ng-invalid.ng-touched {
+  @apply border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-50;
+}
+
+.textarea {
+  @apply resize-none leading-relaxed;
+}
+
+.summary-list {
+  @apply space-y-2;
+}
+
+.summary-row {
+  @apply flex justify-between text-sm text-gray-600 py-1;
+}
+
+.summary-total {
+  @apply flex justify-between text-sm font-medium text-gray-900 pt-3 mt-1 border-t border-gray-100;
+}
+
+.pay-list {
+  @apply space-y-2;
+}
+
+.pay-btn {
+  @apply w-full flex items-center gap-4 px-4 py-3.5 rounded-xl border transition-all text-left;
+}
+
+.pay-btn-default {
+  @apply border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300;
+}
+
+.pay-btn-selected {
+  @apply border-blue-400 bg-blue-50;
+}
+
+.pay-btn-icon {
+  @apply w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0;
+}
+
+.pay-btn-icon i {
+  @apply text-lg;
+}
+
+.pay-btn-body {
+  @apply flex-1;
+}
+
+.pay-btn-name {
+  @apply text-sm font-medium;
+}
+
+.pay-btn-name-default {
+  @apply text-gray-900;
+}
+
+.pay-btn-name-selected {
+  @apply text-blue-700;
+}
+
+.pay-btn-desc {
+  @apply text-xs text-gray-400 mt-0.5;
+}
+
+.pay-btn-arrow {
+  @apply text-sm;
+}
+
+.pay-btn-logo{
+  height: 21px;
+  width: 40px;
+}
+
+.pay-btn-arrow-default {
+  @apply text-gray-300;
+}
+
+.pay-btn-arrow-selected {
+  @apply text-blue-500;
+}
+
+.secure-note {
+  @apply flex items-center justify-center gap-1.5 mt-4 text-xs text-gray-400;
+}
+
+.secure-note i {
+  @apply text-sm;
+}
+
+.proceed-wrapper {
+  @apply pt-2;
+}
+
+.proceed-btn {
+  background: #6A1B4D;
+  @apply w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-medium text-white transition-all;
+  @apply hover:bg-blue-700 active:scale-[0.99];
+  @apply disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:active:scale-100;
+}
+
+.proceed-btn i {
+  @apply text-base;
+}
+
+.error {
+  @apply text-[11px] text-red-500 mt-0.5;
+}

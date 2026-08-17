@@ -1,0 +1,157 @@
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4">
+  <div class="container">
+
+    <!-- Delivery details -->
+    <div class="card" [formGroup]="deliveryForm">
+      <div class="card-header">
+        <div class="card-icon card-icon-blue">
+          <i class="ti ti-map-pin"></i>
+        </div>
+        <div>
+          <p class="card-title">Delivery details</p>
+          <p class="card-subtitle">Where and when should we send your gift?</p>
+        </div>
+    </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>Delivery address</label>
+          <input type="text" class="input input-blue" placeholder="Street, building, apartment"
+                formControlName="deliveryAddress" />
+          <span class="error" *ngIf="deliveryForm.get('deliveryAddress')?.invalid && deliveryForm.get('deliveryAddress')?.touched">
+            Must be atleast 5 characters
+          </span>
+        </div>
+
+        <div class="field-grid-2">
+          <div class="field">
+            <label>City</label>
+            <input type="text" class="input input-blue" placeholder="Kuwait City"
+                  formControlName="city" />
+            <span class="error" *ngIf="deliveryForm.get('city')?.invalid && deliveryForm.get('city')?.touched">
+              Must be atleast 3 characters
+            </span>
+          </div>
+          <div class="field">
+            <label>Block / area</label>
+            <input type="text" class="input input-blue" placeholder="Block 5, Salmiya"
+                  formControlName="blockArea" />
+            <span class="error" *ngIf="deliveryForm.get('blockArea')?.invalid && deliveryForm.get('blockArea')?.touched">
+              Must be atleast 3 characters
+            </span>
+          </div>
+        </div>
+
+        <div class="field-grid-2">
+          <div class="field">
+            <label>Delivery date</label>
+            <input type="date" class="input input-blue" formControlName="deliveryDate" />
+            <span class="error" *ngIf="deliveryForm.get('deliveryDate')?.invalid && deliveryForm.get('deliveryDate')?.touched">
+            Required
+          </span>
+          </div>
+          <div class="field">
+            <label>Preferred time</label>
+            <select class="input input-blue" formControlName="preferredTime">
+              <option value="">Pick a slot</option>
+              <option *ngFor="let slot of timeSlots" [value]="slot">{{ slot }}</option>
+            </select>
+            <span class="error" *ngIf="deliveryForm.get('preferredTime')?.invalid && deliveryForm.get('preferredTime')?.touched">
+            Required
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal message -->
+    <div class="card" [formGroup]="deliveryForm">
+      <div class="card-header">
+        <div class="card-icon card-icon-purple">
+          <i class="ti ti-pencil"></i>
+        </div>
+        <div>
+          <p class="card-title">Personal message</p>
+          <p class="card-subtitle">Add a heartfelt note to your gift</p>
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <label>Recipient name</label>
+          <input type="text" class="input input-purple" placeholder="Who is this gift for?" formControlName="recipientName" />
+          <span class="error" *ngIf="deliveryForm.get('recipientName')?.invalid && deliveryForm.get('recipientName')?.touched">
+          Required
+        </span>
+        </div>
+        <div class="field">
+          <div class="field-label-row">
+            <label>Your message <span class="text-gray-400 font-normal">(optional)</span></label>
+            <span class="char-count">{{ messageLength }}/200</span>
+          </div>
+          <textarea
+            rows="3"
+            maxlength="200"
+            formControlName="message"
+            placeholder="Write something special…"
+            (input)="onMessageInput($event)"
+            class="input input-purple textarea"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Method Section -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon card-icon-green">
+          <i class="ti ti-lock"></i>
+        </div>
+        <div>
+          <p class="card-title">Payment</p>
+          <p class="card-subtitle">All transactions are encrypted and secure</p>
+        </div>
+      </div>
+
+      <div class="pay-list">
+        <button
+          *ngFor="let method of paymentMethods"
+          (click)="selectPayment(method.id)"
+          class="pay-btn cursor-pointer"
+          [ngClass]="selectedPayment === method.id ? 'pay-btn-selected' : 'pay-btn-default'"
+        >
+          <div class="pay-btn-icon">
+            <img  [src]="method.iconSrc" [alt]="method.name" class="pay-btn-logo" />
+          </div>
+          <div class="pay-btn-body">
+            <p class="pay-btn-name" [ngClass]="selectedPayment === method.id ? 'pay-btn-name-selected' : 'pay-btn-name-default'">
+              {{ method.name }}
+            </p>
+            <p class="pay-btn-desc">{{ method.desc }}</p>
+          </div>
+          <i class="ti ti-chevron-right pay-btn-arrow"
+             [ngClass]="selectedPayment === method.id ? 'pay-btn-arrow-selected' : 'pay-btn-arrow-default'">
+          </i>
+        </button>
+      </div>
+
+      <div class="secure-note">
+        <i class="ti ti-shield-check"></i>
+        <span>256-bit SSL encryption · Your payment info is never stored</span>
+      </div>
+    </div>
+
+    <!-- Proceed button -->
+    <div class="proceed-wrapper">
+      <button
+        class="proceed-btn"
+        [disabled]="!selectedPayment || !isFormValid()"
+        (click)="onProceed()"
+      >
+        <span>Proceed to pay</span>
+        <i class="ti ti-arrow-right"></i>
+      </button>
+    </div>
+
+  </div>
+</div>

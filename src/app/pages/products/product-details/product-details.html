@@ -39,23 +39,8 @@
           {{ product.description }}
         </p>
 
-        <hr class="my-5 border-gray-200">
-
-        <div class="flex flex-col lg:flex-row lg:items-center gap-3">
-          <label class="text-gray-700 whitespace-nowrap">Personal Message (Optional)</label>
-          <textarea
-            [(ngModel)]="personalMessage"
-            placeholder="Eg:- Happy Marriage Anniversary!"
-            rows="1"
-            class="flex-1 border border-gray-300 px-2 pt-2 pb-14  text-sm focus:outline-none focus:ring-2 
-                   focus:ring-[#6A1B4D] focus:border-transparent resize-none overflow-y-auto placeholder:text-gray-400"
-          ></textarea>
-        </div>
-
-        <hr class="my-5 border-gray-200">
-
         <!-- Quantity + Cart -->
-        <div class="flex flex-col sm:flex-row gap-4 mt-6 items-start sm:items-center">
+        <div class="flex flex-col min-[350px]:flex-row gap-4 mt-6 items-start min-[350px]:items-center">
           <div class="flex items-center border rounded-xl overflow-hidden">
             <button (click)="decreaseQty()" class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-gray-200">-</button>
             <span class="px-5">{{ quantity }}</span>
@@ -63,7 +48,7 @@
           </div>
 
           <button (click)="addToCart()"
-                  class="bg-[#6A1B4D] hover:bg-[#3B0F3D] cursor-pointer text-white px-6 py-3 rounded-xl shadow transition w-full sm:w-auto">
+                  class="bg-[#6A1B4D] hover:bg-[#3B0F3D] cursor-pointer text-white px-6 py-3 rounded-xl shadow transition w-full min-[350px]:w-auto">
             Add to Cart
           </button>
         </div>

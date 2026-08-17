@@ -14,6 +14,10 @@ body{
   font-size: 0.75rem;
 }
 
+.page-container {
+  @apply max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4;
+}
+
 /* Medium devices (sm ≥ 640px) */
 @media (min-width: 640px) {
   .section-title {
