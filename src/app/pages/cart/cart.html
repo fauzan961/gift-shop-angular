@@ -1,108 +1,188 @@
-<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
-      <!-- Title -->
-  <h1 class="text-3xl font-bold mb-8">Your Cart</h1>
+<div class="cart-page max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-10">
 
-  <div class="grid lg:grid-cols-3 gap-8">
+  <!-- ============ Banner + step indicator ============ -->
+  <section class="page-banner">
+    <span class="banner-glow" aria-hidden="true"></span>
 
-    <!-- Cart Items -->
-    <div class="lg:col-span-2 space-y-6">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">Cart</span>
+    </nav>
 
-      <!-- Item -->
-      <div class="flex gap-5 border rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+    <h1 class="banner-title">
+      Your Cart
+      @if (itemCount) { <span class="title-count">{{ itemCount }} {{ itemCount === 1 ? 'item' : 'items' }}</span> }
+    </h1>
 
-        <!-- Image -->
-        <img src="https://via.placeholder.com/120"
-             class="w-28 h-28 object-cover rounded-xl"/>
+    <ol class="steps" aria-label="Checkout progress">
+      <li class="step is-current"><span class="step-dot">1</span> Cart</li>
+      <li class="step-line" aria-hidden="true"></li>
+      <li class="step"><span class="step-dot">2</span> Delivery &amp; payment</li>
+      <li class="step-line" aria-hidden="true"></li>
+      <li class="step"><span class="step-dot">3</span> Confirmation</li>
+    </ol>
+  </section>
 
-        <!-- Info -->
-        <div class="flex-1 flex flex-col justify-between">
+  @if (items.length) {
+    <div class="cart-layout">
 
-          <!-- Top -->
-          <div>
-            <h2 class="font-semibold text-lg">Rose Bouquet</h2>
-            <p class="text-gray-500 text-sm">Premium flowers collection</p>
+      <!-- ============ Items ============ -->
+      <div class="items-col">
+        @for (item of items; track item.id) {
+          <article class="cart-item">
+            <img class="item-image" [src]="item.image" [alt]="item.name" />
+
+            <div class="item-main">
+              <div class="item-head">
+                <span class="item-category">{{ item.category }}</span>
+                <h2 class="item-name">{{ item.name }}</h2>
+                <p class="item-unit">
+                  {{ item.price.toFixed(3) }} KWD each
+                  @if (item.oldPrice) {
+                    <span class="unit-was">{{ item.oldPrice.toFixed(3) }} KWD</span>
+                  }
+                </p>
+              </div>
+
+              <div class="item-foot">
+                <div class="qty" role="group" [attr.aria-label]="'Quantity for ' + item.name">
+                  <button type="button" (click)="decrement(item)" [disabled]="item.qty === 1"
+                    aria-label="Decrease quantity">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <path d="M5 12h14" />
+                    </svg>
+                  </button>
+                  <span class="qty-value">{{ item.qty }}</span>
+                  <button type="button" (click)="increment(item)" aria-label="Increase quantity">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </button>
+                </div>
+
+                <span class="line-total">{{ lineTotal(item).toFixed(3) }} KWD</span>
+
+                <button type="button" class="remove-btn" (click)="remove(item)"
+                  [attr.aria-label]="'Remove ' + item.name + ' from cart'">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" />
+                  </svg>
+                  <span>Remove</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+
+        <button type="button" class="continue-link" (click)="continueShopping()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Continue shopping
+        </button>
+      </div>
+
+      <!-- ============ Summary ============ -->
+      <aside class="summary-col">
+        <div class="summary-card">
+          <h2 class="summary-title">Order Summary</h2>
+
+          <!-- Free delivery meter -->
+          <div class="delivery-meter" [class.unlocked]="hasFreeDelivery">
+            <p class="meter-text">
+              @if (hasFreeDelivery) {
+                🎉 <strong>Free delivery unlocked</strong>
+              } @else {
+                Add <strong>{{ amountToFreeDelivery.toFixed(3) }} KWD</strong> more for free delivery
+              }
+            </p>
+            <div class="meter-track">
+              <span class="meter-fill" [style.width.%]="freeDeliveryProgress"></span>
+            </div>
           </div>
 
-          <!-- Bottom -->
-          <div class="flex items-center justify-between mt-3">
-
-            <!-- Quantity -->
-            <div class="flex items-center border rounded-lg overflow-hidden">
-
-              <button class="px-3 py-1 text-lg hover:bg-gray-100 cursor-pointer">−</button>
-              <span class="px-4 font-medium">1</span>
-              <button class="px-3 py-1 text-lg hover:bg-gray-100 cursor-pointer">+</button>
-
+          <dl class="summary-rows">
+            <div class="row">
+              <dt>Subtotal <span class="row-note">({{ itemCount }} {{ itemCount === 1 ? 'item' : 'items' }})</span></dt>
+              <dd>{{ subtotal.toFixed(3) }} KWD</dd>
             </div>
 
-            <!-- Price -->
-            <p class="max-[400px]:hidden font-semibold text-lg">25.00 KD</p>
+            @if (savings > 0) {
+              <div class="row saving">
+                <dt>You save</dt>
+                <dd>−{{ savings.toFixed(3) }} KWD</dd>
+              </div>
+            }
 
-            <!-- Remove -->
-            <button class="hidden sm:block text-red-500 hover:text-red-600 text-sm font-medium cursor-pointer">
-              Remove
-            </button>
+            <div class="row">
+              <dt>Delivery</dt>
+              <dd>
+                @if (hasFreeDelivery) {
+                  <span class="free-tag">Free</span>
+                } @else {
+                  {{ delivery.toFixed(3) }} KWD
+                }
+              </dd>
+            </div>
 
+            <div class="row total-row">
+              <dt>Total</dt>
+              <dd>{{ total.toFixed(3) }} KWD</dd>
+            </div>
+          </dl>
+
+          <button type="button" class="checkout-btn" (click)="checkout()">
+            Proceed to Checkout
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <p class="next-note">
+            Delivery address, date and payment are set on the next step.
+          </p>
+
+          <ul class="trust-list">
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              Secure payment — Knet, cards &amp; Apple&nbsp;Pay
+            </li>
+            <li>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              Same-day delivery across Kuwait
+            </li>
+          </ul>
         </div>
-
-        <p class="min-[400px]:hidden font-semibold text-lg pt-2">25.00 KD</p>
-
-          <div class="sm:hidden text-red-500 hover:text-red-600 text-sm font-medium pt-2 cursor-pointer">
-            Remove
-          </div>
-        </div>
-      </div>
-      <!-- /Item -->
-
-
-      <!-- Duplicate items here dynamically -->
+      </aside>
     </div>
 
-
-
-    <!-- Summary Card -->
-    <div class="border rounded-2xl p-6 shadow-sm h-fit sticky top-24">
-
-      <h2 class="text-xl font-semibold mb-6">Order Summary</h2>
-
-      <div class="space-y-3 text-sm">
-
-        <div class="flex justify-between">
-          <span class="text-gray-500">Subtotal</span>
-          <span>$50.00</span>
-        </div>
-
-        <div class="flex justify-between">
-          <span class="text-gray-500">Shipping</span>
-          <span>$5.00</span>
-        </div>
-
-        <div class="flex justify-between">
-          <span class="text-gray-500">Tax</span>
-          <span>$2.50</span>
-        </div>
-
-        <div class="border-t pt-4 flex justify-between font-semibold text-lg">
-          <span>Total</span>
-          <span>$57.50</span>
-        </div>
-
+    <!-- ============ Mobile sticky bar ============ -->
+    <div class="mobile-bar">
+      <div class="bar-total">
+        <span class="bar-label">Total</span>
+        <span class="bar-value">{{ total.toFixed(3) }} KWD</span>
       </div>
-
-      <!-- Checkout Button -->
-      <button
-        (click)="checkout()"
-        class="bg-[#6A1B4D] w-full mt-6 text-white py-3 rounded-xl font-medium
-               hover:bg-[#3B0F3D] transition cursor-pointer">
-        Proceed to Checkout
+      <button type="button" class="bar-btn" (click)="checkout()">
+        Checkout
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
       </button>
-
-      <!-- Continue shopping -->
-      <button class="w-full mt-3 text-sm text-gray-500 hover:underline cursor-pointer">
-        Continue Shopping
-      </button>
-
     </div>
 
-  </div>
+  } @else {
+    <!-- ============ Empty cart ============ -->
+    <div class="empty-cart">
+      <span class="empty-emoji">🛒</span>
+      <h2>Your cart is empty</h2>
+      <p>Nothing here yet — find something lovely to send.</p>
+      <button type="button" class="empty-btn" (click)="continueShopping()">Browse gifts</button>
+    </div>
+  }
 </div>
