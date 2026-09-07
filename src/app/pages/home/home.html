@@ -1,31 +1,78 @@
 <div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4">
   <!-- Hero Banner -->
-  <div class="relative rounded-3xl overflow-hidden shadow-xl min-h-[260px] sm:min-h-[350px] lg:min-h-[400px]">
-    <!-- Background Image (Full Banner) -->
-    <div class="absolute inset-0">
-      <img 
-        src="../../../assets/images/banner.webp" 
-        alt="Gift with flowers and cake" 
-        class="w-full h-full object-cover object-center"
-      />
-      <!-- Gradient Overlay for text readability -->
-      <div class="absolute inset-0 bg-gradient-to-r from-[#3A0D2E]/90 via-[#3A0D2E]/50 to-transparent"></div>
-    </div>
+  <section class="hero">
+    <span class="hero-glow hero-glow-a" aria-hidden="true"></span>
+    <span class="hero-glow hero-glow-b" aria-hidden="true"></span>
 
-    <!-- Content Positioned Over Image -->
-    <div class="relative z-10 h-full min-h-[260px] sm:min-h-[350px] lg:min-h-[400px] flex items-end">
-      <div class="p-8 sm:p-12 lg:p-16 pb-12">
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-          Surprise Your<br>Loved Ones
+    <div class="hero-inner">
+      <!-- Copy -->
+      <div class="hero-content">
+        <span class="hero-pill">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          Same-day delivery across Kuwait
+        </span>
+
+        <h1 class="hero-title">
+          Surprise your
+          <span class="hero-accent">loved ones</span>
         </h1>
-        <button 
-        (click)="onShopClick()"
-        class="cursor-pointer bg-purple-600/80 hover:bg-purple-700 text-white font-semibold text-lg px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 shadow-lg">
-          Shop now
-        </button>
+
+        <p class="hero-sub">
+          Hand-tied blooms, fresh-baked cakes and hand-picked keepsakes — wrapped
+          beautifully and delivered to their door in hours.
+        </p>
+
+        <div class="hero-actions">
+          <button type="button" class="hero-btn-primary" (click)="onShopClick()">
+            Shop now
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+          <button type="button" class="hero-btn-ghost" (click)="onOccasionClick()">
+            Browse occasions
+          </button>
+        </div>
+
+        <div class="hero-trust">
+          <span class="trust-avatars" aria-hidden="true">
+            <span class="trust-avatar">LA</span>
+            <span class="trust-avatar">OH</span>
+            <span class="trust-avatar">SM</span>
+          </span>
+          <span class="trust-text">
+            <strong>12,000+</strong> happy gifters
+            <span class="trust-rating">
+              <span class="trust-stars" aria-hidden="true">
+                @for (star of heroStars; track star) {
+                  <svg width="12" height="12" viewBox="0 0 24 24">
+                    <path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/>
+                  </svg>
+                }
+              </span>
+              4.9
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Product collage -->
+      <div class="hero-collage">
+        <figure class="collage-card card-main">
+          <img src="/assets/images/flowers.jpg" alt="Red rose bouquet" />
+        </figure>
+        <figure class="collage-card card-top">
+          <img src="/assets/images/cake.jpg" alt="Celebration cake" />
+        </figure>
+        <figure class="collage-card card-bottom">
+          <img src="/assets/images/pendant.webp" alt="Heart pendant necklace" />
+        </figure>
+
+        <span class="float-chip chip-delivery">🚚 2-hour delivery</span>
+        <span class="float-chip chip-wrap">🎀 Free gift wrap</span>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Trending Gifts Section -->
    <app-gifts-carousel

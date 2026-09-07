@@ -82,7 +82,13 @@ export class Home{
     },
   ];
 
+  heroStars = [1, 2, 3, 4, 5];
+
   onShopClick(){
   this.router.navigate(['/products']);
+  }
+
+  onOccasionClick(){
+    this.router.navigate(['/occasion']);
   }
 }

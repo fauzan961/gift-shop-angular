@@ -1,133 +1,220 @@
-<!-- Navbar with rounded corners -->
-<div
-  class="navbar fixed w-full max-w-full z-50 bg-gradient-to-r from-[#3A0D2E] via-[#6A1B4D] to-[#3B0F3D] shadow-md pr-6 flex items-center justify-between h-16 lg:gap-10">
-  <!-- Logo -->
-  <div class="flex-shrink-0 -ml-4">
-    <a href="/" class="flex items-center">
-      <img src="../../../assets/images/logo4.webp" alt="Mawada" class="h-20" />
+<!-- ============ Navbar ============ -->
+<header class="navbar fixed w-full max-w-full z-50" [class.is-scrolled]="isScrolled">
+  <div class="nav-shell max-w-[1400px] mx-auto px-3 sm:px-5 flex items-center gap-2 sm:gap-4">
+
+    <!-- Logo -->
+    <a routerLink="/home" class="nav-logo shrink-0" aria-label="Mawada home">
+      <img src="/assets/images/logo4.webp" alt="Mawada" />
     </a>
-  </div>
 
-  <!-- Navigation Links -->
-  <ul class="hidden lg:flex items-center gap-8 flex-1">
-    <li><a href="/" class="text-[#F5E9F2] hover:text-[#F2A9D0] font-medium text-[15px] transition-colors">Home</a></li>
-    <li><a href="/categories"
-        class="text-[#F5E9F2] hover:text-[#F2A9D0] font-medium text-[15px] transition-colors">Categories</a></li>
-    <li><a href="/occasion"
-        class="text-[#F5E9F2] hover:text-[#F2A9D0] font-medium text-[15px] transition-colors">Occasion</a></li>
-    <li><a href="/products"
-        class="text-[#F5E9F2] hover:text-[#F2A9D0] font-medium text-[15px] transition-colors">Gifts</a></li>
-  </ul>
+    <!-- Desktop Navigation -->
+    <nav class="hidden lg:flex items-center gap-1 ml-2">
+      <a routerLink="/home" routerLinkActive="is-active" class="nav-link">Home</a>
+      <a routerLink="/categories" routerLinkActive="is-active" class="nav-link">Categories</a>
+      <a routerLink="/occasion" routerLinkActive="is-active" class="nav-link">Occasion</a>
+      <a routerLink="/products" routerLinkActive="is-active" class="nav-link">Gifts</a>
+    </nav>
 
-  <!-- Right Side Actions -->
-  <div class="flex items-center gap-5 [@media(max-width:310px)]:gap-2">
-    <!-- Search Button -->
-    <button (click)="onSearch()" class="hidden md:block p-2 hover:text-[#F2A9D0] transition-colors text-[#F5E9F2]"
-      aria-label="Search">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-      </svg>
-    </button>
+    <span class="flex-1"></span>
 
-    <!--  Dashboard Dropdown -->
-    <div class="relative group hidden md:block" (mouseleave)="isDropdownOpen=false" (click)="isDropdownOpen = !isDropdownOpen">
-      <!-- Button -->
-      <button
-        class="cursor-pointer flex items-center gap-2 px-3 py-2 text-[#F5E9F2] font-medium text-[15px] transition-colors hover:text-[#F2A9D0]">
-        Dashboard
-        <svg class="w-3 h-3 transition-transform group-hover:rotate-180" [class.rotate-180]="isDropdownOpen || isHovering" fill="none"
-          stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-1 sm:gap-1.5">
+
+      <!-- Search Bar -->
+      <div class="relative search-bar" (click)="$event.stopPropagation()">
+        <div class="search-field" [class.focused]="isSearchOpen">
+          <svg class="w-4 h-4 shrink-0 text-[#9C8A94]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInput()"
+            (focus)="onSearchFocus()"
+            placeholder="Search for gifts..."
+            autocomplete="off" />
+          <button *ngIf="searchQuery" (click)="clearSearch()" type="button" class="search-clear"
+            aria-label="Clear search">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Search Dropdown -->
+        <div *ngIf="isSearchOpen && searchQuery" class="search-panel">
+          <p class="panel-label">Popular Suggestions</p>
+          <a *ngFor="let s of popularSuggestions" (click)="selectSuggestion(s)" class="suggestion-row">
+            <svg class="w-3.5 h-3.5 text-[#B3A4AC] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {{ s }}
+          </a>
+
+          <hr class="panel-divider" />
+
+          <p class="panel-label">Products</p>
+          <a *ngFor="let p of productSuggestions" (click)="selectProduct(p)" class="product-row">
+            <img [src]="p.image" [alt]="p.name" />
+            <span class="product-meta">
+              <span class="product-name">{{ p.name }}</span>
+              <span class="product-stars">
+                <svg *ngFor="let star of [1,2,3,4,5]" class="w-3 h-3" [class.dim]="star > p.rating"
+                  fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                </svg>
+              </span>
+            </span>
+            <span class="product-price">{{ p.price }} KWD</span>
+          </a>
+
+          <div class="panel-cta">
+            <a (click)="showMoreResults()">
+              Show more results
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Button (narrow screens) -->
+      <button (click)="onSearch()" class="search-button icon-btn" aria-label="Search">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </button>
 
-      <!-- Dropdown Menu -->
-      <div class="absolute right-0 mt-2 w-56 bg-gradient-to-b from-[#6A1B4D] to-[#3A0D2E] border-t border-purple-700 rounded-lg shadow-lg transition-all duration-200 transform
-              opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0"
-          [class.opacity-100]="isDropdownOpen"
-          [class.visible]="isDropdownOpen"
-          [class.translate-y-0]="isDropdownOpen"
-          [class.opacity-0]="!isDropdownOpen"
-          [class.invisible]="!isDropdownOpen"
-          [class.translate-y-2]="!isDropdownOpen">
-        <a href="#"
-          class="flex items-center justify-between px-4 py-3 text-sm text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors first:rounded-t-lg">
-          Wishlist
-        </a>
-        <a href="#"
-          class="flex items-center justify-between px-4 py-3 text-sm text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors">
-          My Orders
-        </a>
-        <a href="#"
-          class="flex items-center justify-between px-4 py-3 text-sm text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors last:rounded-b-lg">
-          Logout
-          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+      <!-- Dashboard Dropdown -->
+      <div class="relative group hidden md:block">
+        <button class="nav-link flex items-center gap-1.5" type="button">
+          Dashboard
+          <svg class="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
           </svg>
-        </a>
+        </button>
+
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            Wishlist
+          </a>
+          <a href="#" class="dropdown-item">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+            My Orders
+          </a>
+          <a href="#" class="dropdown-item danger">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+            </svg>
+            Logout
+          </a>
+        </div>
       </div>
+
+      <!-- Language Selector -->
+      <button (click)="switchLanguage()" class="lang-btn hidden md:inline-flex">العربية</button>
+
+      <!-- User Account -->
+      <button (click)="onAccountClick()" class="icon-btn account-btn" aria-label="Account">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </button>
+
+      <!-- Shopping Cart -->
+      <button (click)="onCartClick()" class="icon-btn relative" aria-label="Shopping Cart">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span *ngIf="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</span>
+      </button>
+
+      <!-- Mobile Menu Button -->
+      <button (click)="toggleMobileMenu()" class="icon-btn menu-btn" aria-label="Menu"
+        [attr.aria-expanded]="isMobileMenuOpen">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
     </div>
+  </div>
+</header>
 
-    <!-- Language Selector -->
-    <button (click)="switchLanguage()"
-      class="hidden md:block px-3 py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium text-[15px] transition-colors">
-      العربية
-    </button>
+<!-- ============ Mobile Drawer ============ -->
+<div class="drawer-backdrop" [class.open]="isMobileMenuOpen" (click)="closeMobileMenu()" aria-hidden="true"></div>
 
-    <!-- User Account -->
-    <button (click)="onAccountClick()"
-      class="cursor-pointer p-2 text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors [@media(max-width:290px)]:hidden"
-      aria-label="Account">
+<aside class="mobile-drawer" [class.open]="isMobileMenuOpen">
+  <!-- Drawer header -->
+  <div class="drawer-top">
+    <img src="/assets/images/logo4.webp" alt="Mawada" class="drawer-logo" />
+    <button (click)="closeMobileMenu()" class="icon-btn" aria-label="Close menu">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Drawer search -->
+  <div class="drawer-search">
+    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search for gifts..." autocomplete="off" />
+  </div>
+
+  <!-- Drawer nav -->
+  <nav class="drawer-nav">
+    <a *ngFor="let item of mobileNav" [routerLink]="item.link" routerLinkActive="is-active"
+      (click)="closeMobileMenu()" class="drawer-link">
+      <span class="drawer-icon">{{ item.icon }}</span>
+      <span class="drawer-label">{{ item.label }}</span>
+      <svg class="drawer-chevron w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </nav>
+
+  <hr class="drawer-divider" />
+
+  <!-- Drawer account actions -->
+  <div class="drawer-actions">
+    <button (click)="onAccountClick(); closeMobileMenu()" class="drawer-action">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
+      My account
     </button>
-
-    <!-- Shopping Cart -->
-    <button (click)="onCartClick()"
-      class="cursor-pointer relative p-2 text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors"
-      aria-label="Shopping Cart">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <button (click)="onCartClick(); closeMobileMenu()" class="drawer-action">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
       </svg>
-      <span *ngIf="cartItemCount > 0"
-        class="absolute -top-1 -right-1 bg-purple-700 text-white text-[10px] font-semibold min-w-[16px] h-4 rounded-full flex items-center justify-center px-1">
-        {{ cartItemCount }}
-      </span>
-    </button>
-
-    <!-- Mobile Menu Button -->
-    <button (click)="toggleMobileMenu()"
-      class="cursor-pointer lg:hidden p-2 text-[#F5E9F2] hover:text-[#F2A9D0] transition-colors" aria-label="Menu">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
+      My cart
     </button>
   </div>
-</div>
 
-<!-- Mobile Menu -->
-<div *ngIf="isMobileMenuOpen" class="fixed inset-0 z-40 bg-black/50" (click)="closeMobileMenu()">
-  <div *ngIf="isMobileMenuOpen"
-    class="lg:hidden absolute top-16 left-0 w-full bg-gradient-to-r from-[#3A0D2E] via-[#6A1B4D] to-[#3B0F3D] shadow-lg p-4 animate-slide-down origin-top z-40">
-    <ul class="space-y-2">
-      <li class=""><a href="/" class="block py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">Home</a></li>
-      <li><a href="/categories" class="block py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">Categories</a></li>
-      <li><a href="/occasion" class="block py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">Occasion</a></li>
-      <li><a href="/products" class="block py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">Gifts</a></li>
-      <li class="border-t border-white pt-3">
-        <a href="/gifting" class="block py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">Gifting</a>
-      </li>
-      <li>
-        <button (click)="switchLanguage()"
-          class="block w-full text-left py-2 text-[#F5E9F2] hover:text-[#F2A9D0] font-medium">
-          العربية
-        </button>
-      </li>
-    </ul>
+  <!-- Drawer footer -->
+  <div class="drawer-footer">
+    <button (click)="switchLanguage()" class="drawer-lang">
+      <span>🌐</span> العربية
+    </button>
+    <p class="drawer-note">Same-day delivery across Kuwait</p>
   </div>
-</div>
+</aside>
