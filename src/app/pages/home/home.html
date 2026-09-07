@@ -28,9 +28,21 @@
   </div>
 
   <!-- Trending Gifts Section -->
-   <app-gifts-carousel [title]="'Trending Gifts 🎁'"></app-gifts-carousel>
+   <app-gifts-carousel
+     [eyebrow]="'Most loved right now'"
+     [title]="'Trending Gifts 🎁'"></app-gifts-carousel>
+
+  <!-- Shop by Occasion Section -->
+   <app-occasions></app-occasions>
+
   <!-- New Arrival Gifts Section -->
-   <app-gifts-carousel [title]="'New Arrivals ✨'" ></app-gifts-carousel>
+   <app-gifts-carousel
+     [eyebrow]="'Fresh in this week'"
+     [title]="'New Arrivals ✨'"
+     [gifts]="newArrivals"></app-gifts-carousel>
    <!-- Categories Section -->
     <app-categories></app-categories>
+
+   <!-- Testimonials & Stats Section -->
+    <app-testimonials></app-testimonials>
 </div>

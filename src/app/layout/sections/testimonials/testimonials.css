@@ -1,0 +1,252 @@
+.testimonials-section {
+  padding-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .testimonials-section {
+    padding-top: 2rem;
+  }
+}
+
+/* Plum band */
+.testimonials-band {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  padding: 2.5rem 1.5rem;
+  background: linear-gradient(135deg, #3A0D2E 0%, #5A1440 55%, #6A1B4D 100%);
+  box-shadow: 0 18px 45px rgba(58, 13, 46, 0.28);
+}
+
+@media (min-width: 640px) {
+  .testimonials-band {
+    padding: 3.5rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .testimonials-band {
+    padding: 4rem 3.5rem;
+  }
+}
+
+/* Decorative glows */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.glow-one {
+  top: -6rem;
+  right: -4rem;
+  width: 22rem;
+  height: 22rem;
+  background: rgba(242, 169, 208, 0.28);
+}
+
+.glow-two {
+  bottom: -8rem;
+  left: -5rem;
+  width: 20rem;
+  height: 20rem;
+  background: rgba(147, 51, 234, 0.25);
+}
+
+/* Header */
+.band-header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto 2.25rem;
+}
+
+.band-eyebrow {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #F2A9D0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.band-title {
+  margin-top: 0.9rem;
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .band-title {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .band-title {
+    font-size: 2.4rem;
+  }
+}
+
+.band-subtitle {
+  margin-top: 0.65rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .band-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Cards */
+.testimonial-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .testimonial-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.testimonial-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  transition: transform 0.35s ease, background 0.35s ease, border-color 0.35s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(242, 169, 208, 0.45);
+}
+
+/* Stars */
+.stars {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.stars svg {
+  fill: #F2A9D0;
+}
+
+.stars svg.dim {
+  fill: rgba(255, 255, 255, 0.22);
+}
+
+/* Quote */
+.quote {
+  flex: 1;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+/* Author */
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #F2A9D0 0%, #B3768F 100%);
+  color: #3A0D2E;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.author-name {
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.author-location {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+}
+
+/* Stats */
+.stats-strip {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 1rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+@media (min-width: 768px) {
+  .stats-strip {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.stat-value {
+  color: #F2A9D0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (min-width: 640px) {
+  .stat-value {
+    font-size: 2rem;
+  }
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}

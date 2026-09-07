@@ -1,0 +1,48 @@
+<section class="occasions-section">
+  <!-- Section Header -->
+  <div class="flex flex-wrap items-end justify-between gap-3 mb-1">
+    <div>
+      <span class="eyebrow">Every moment matters</span>
+      <h2 class="section-title">Gift by Occasion 🎈</h2>
+    </div>
+    <button type="button" class="view-all-btn" (click)="onOccasionClick()">
+      View all occasions
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Bento Grid -->
+  <div class="occasions-grid">
+    <!-- Featured Tile -->
+    <button type="button" class="occasion-tile featured" (click)="onOccasionClick()">
+      <img [src]="featured.image" [alt]="featured.name" />
+      <span class="tile-overlay"></span>
+      <span class="tile-emoji">{{ featured.emoji }}</span>
+      <span class="tile-content">
+        <span class="tile-name">{{ featured.name }}</span>
+        <span class="tile-tagline">{{ featured.tagline }}</span>
+        <span class="tile-cta">
+          Shop now
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </span>
+      </span>
+    </button>
+
+    <!-- Supporting Tiles -->
+    @for (occasion of occasions; track occasion.name) {
+      <button type="button" class="occasion-tile" (click)="onOccasionClick()">
+        <img [src]="occasion.image" [alt]="occasion.name" />
+        <span class="tile-overlay"></span>
+        <span class="tile-emoji">{{ occasion.emoji }}</span>
+        <span class="tile-content">
+          <span class="tile-name">{{ occasion.name }}</span>
+          <span class="tile-tagline">{{ occasion.tagline }}</span>
+        </span>
+      </button>
+    }
+  </div>
+</section>
