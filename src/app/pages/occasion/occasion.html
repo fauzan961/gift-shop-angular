@@ -1,54 +1,203 @@
-<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4">
-     <!-- Page Header -->
-    <div class="text-center mb-14">
-        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-        Shop by Occasion
-        </h1>
-        <p class="text-gray-500 max-w-2xl mx-auto text-lg">
-        Find the perfect gift for every special moment. Celebrate life's occasions with thoughtful presents for your loved ones.
-        </p>
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-10">
+
+  <!-- ============ Page banner ============ -->
+  <section class="page-banner">
+    <span class="banner-glow" aria-hidden="true"></span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">Occasion</span>
+    </nav>
+    <h1 class="banner-title">Shop by Occasion 🎈</h1>
+    <p class="banner-sub">
+      Every milestone deserves the right present. Pick the moment and we'll show you
+      what to send.
+    </p>
+  </section>
+
+  <!-- ============ Spotlight: next occasion ============ -->
+  <section class="spotlight">
+    <span class="spot-glow spot-glow-a" aria-hidden="true"></span>
+    <span class="spot-glow spot-glow-b" aria-hidden="true"></span>
+
+    <div class="spotlight-media">
+      <img [src]="nextOccasion.image" [alt]="nextOccasion.name" />
+      <span class="media-emoji">{{ nextOccasion.emoji }}</span>
     </div>
 
-    <!-- Occasion Categories -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mb-16">
-        @for (occasion of occasions; track occasion.name) {
-            <div class="group relative overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition cursor-pointer">
-                <img 
-                [src]="occasion.image"
-                class="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
-                >
-                <div class="absolute inset-0 bg-black/30 flex items-end p-4">
-                <h3 class="text-white text-xl font-semibold">
-                    {{ occasion.name }}
-                </h3>
-                </div>
-            </div>
+    <div class="spotlight-body">
+      <span class="spotlight-kicker">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        Coming up next
+      </span>
+
+      <h2 class="spotlight-title">{{ nextOccasion.name }}</h2>
+      <p class="spotlight-sub">{{ nextOccasion.tagline }} — order early and we'll deliver on the day.</p>
+
+      <div class="countdown">
+        <span class="count-num">{{ nextDays }}</span>
+        <span class="count-copy">
+          <strong>{{ nextDays === 1 ? 'day to go' : 'days to go' }}</strong>
+          <span>Arrives {{ dateLabel(nextOccasion) }} · {{ giftCount(nextOccasion.name) }} gift ideas ready</span>
+        </span>
+      </div>
+
+      <div class="spotlight-actions">
+        <button type="button" class="spot-btn-primary" (click)="selectOccasion(nextOccasion.name)">
+          See {{ nextOccasion.name }} gifts
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="spot-btn-ghost" (click)="scrollToOccasions()">
+          All occasions
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Occasion grid ============ -->
+  <section class="occasions-block" #occasionsSection>
+    <div class="block-head">
+      <div>
+        <span class="eyebrow">Pick a moment</span>
+        <h2 class="block-title">All Occasions</h2>
+      </div>
+      @if (selectedOccasion) {
+        <button type="button" class="reset-btn" (click)="clearOccasion()">
+          Show all gifts
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      }
+    </div>
+
+    <div class="occasion-grid">
+      @for (occasion of occasions; track occasion.name) {
+        <button type="button" class="occasion-tile" [class.is-active]="selectedOccasion === occasion.name"
+          (click)="selectOccasion(occasion.name)" [attr.aria-pressed]="selectedOccasion === occasion.name">
+          <img [src]="occasion.image" [alt]="occasion.name" />
+          <span class="tile-overlay"></span>
+
+          <span class="tile-emoji">{{ occasion.emoji }}</span>
+          <span class="tile-date">{{ dateLabel(occasion) }}</span>
+
+          <span class="tile-content">
+            <span class="tile-name">{{ occasion.name }}</span>
+            <span class="tile-tagline">{{ occasion.tagline }}</span>
+            <span class="tile-count">{{ giftCount(occasion.name) }} gifts</span>
+          </span>
+
+          <span class="tile-check" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- ============ Gifts ============ -->
+  <section class="gifts-block" #giftsSection>
+    <div class="block-head">
+      <div>
+        <span class="eyebrow">
+          @if (selectedOccasion) { Curated selection } @else { Loved by everyone }
+        </span>
+        <h2 class="block-title">{{ giftsHeading }}</h2>
+      </div>
+
+      <div class="head-actions">
+        @if (selectedOccasion) {
+          <button type="button" class="chip-active" (click)="clearOccasion()">
+            {{ selectedOccasion }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         }
+        <button type="button" class="view-all-btn" (click)="shopAll()">
+          View all
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
     </div>
 
-  <!-- Featured Gifts -->
-    <div>
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
-            Popular Gift Ideas
-            </h2>
-            <a class="text-[#6A1B4D] font-semibold hover:underline cursor-pointer">
-            View All
-            </a>
-        </div>
+    <div class="gift-grid">
+      @for (gift of filteredGifts; track gift.id) {
+        <article class="gift-card" (click)="openGift()">
+          <div class="card-image">
+            <img [src]="gift.image" [alt]="gift.name" />
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @for (gift of gifts; track gift.name) {
-                <div class="bg-white rounded-xl shadow hover:shadow-lg transition p-3 overflow-hidden">
-                    <img [src]="gift.image" class="w-full h-48 object-cover rounded-lg mb-3">
-                    <h3 class="font-semibold text-gray-700">
-                        {{ gift.name }}
-                    </h3>
-                    <p class="text-[#6A1B4D] font-bold mt-1">
-                        ${{ gift.price }}
-                    </p>
-                </div>
+            @if (gift.badge) {
+              <span class="card-badge" [class]="'card-badge badge-' + gift.badge.toLowerCase()">{{ gift.badge }}</span>
             }
-        </div>
+            @if (discountPercent(gift)) {
+              <span class="card-discount">-{{ discountPercent(gift) }}%</span>
+            }
+
+            <button type="button" class="fav-btn" [class.active]="gift.isFavorite"
+              [attr.aria-label]="gift.isFavorite ? 'Remove from wishlist' : 'Add to wishlist'"
+              (click)="toggleFavorite(gift, $event)">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+
+            <span class="quick-view">View details</span>
+          </div>
+
+          <div class="card-body">
+            <span class="card-category">{{ gift.category }}</span>
+            <h3 class="card-name">{{ gift.name }}</h3>
+
+            <div class="card-rating">
+              <span class="stars">
+                @for (star of stars; track star) {
+                  <svg width="12" height="12" viewBox="0 0 24 24" [class.dim]="star > gift.rating" aria-hidden="true">
+                    <path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/>
+                  </svg>
+                }
+              </span>
+              <span class="rating-value">{{ gift.rating.toFixed(1) }}</span>
+              <span class="rating-count">({{ gift.reviews }})</span>
+            </div>
+
+            <div class="card-footer">
+              <span class="price-block">
+                <span class="price-now">{{ gift.price.toFixed(3) }} KWD</span>
+                @if (gift.oldPrice) {
+                  <span class="price-was">{{ gift.oldPrice.toFixed(3) }} KWD</span>
+                }
+              </span>
+              <button type="button" class="cart-btn" aria-label="Add to cart" (click)="addToCart(gift, $event)">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      }
     </div>
+  </section>
+
+  <!-- ============ Reminder band ============ -->
+  <section class="reminder-band">
+    <span class="band-glow" aria-hidden="true"></span>
+    <div class="band-copy">
+      <h2>Never miss a date again 🔔</h2>
+      <p>Save the occasions that matter and we'll nudge you a week before, with gift ideas ready to go.</p>
+    </div>
+    <div class="band-actions">
+      <button type="button" class="band-btn-primary" (click)="shopAll()">Start gifting</button>
+      <button type="button" class="band-btn-ghost" routerLink="/categories">Browse categories</button>
+    </div>
+  </section>
 </div>

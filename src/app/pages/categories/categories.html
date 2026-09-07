@@ -1,32 +1,94 @@
-<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4">
-    <!-- Page Header -->
-    <div class="text-center mb-14">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">
-            Shop by Category
-        </h1>
-        <p class="text-gray-500 max-w-2xl mx-auto text-lg">
-            Browse our gift categories and find the perfect surprise for your loved ones.
-        </p>
-    </div>
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-10">
 
-    <!-- Category Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        @for (category of categories; track category.name) {
-            <div class="relative group cursor-pointer rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                
-                <!-- Image -->
-                <img 
-                    [src]="category.image"
-                    class="w-full h-60 object-cover rounded-3xl transition-transform duration-500 group-hover:scale-105"
-                >
+  <!-- ============ Page banner ============ -->
+  <section class="page-banner">
+    <span class="banner-glow" aria-hidden="true"></span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">Categories</span>
+    </nav>
+    <h1 class="banner-title">Shop by Category 🛍️</h1>
+    <p class="banner-sub">
+      {{ totalGifts }} gifts across {{ categories.length }} categories — browse the shelf
+      that fits the person you're buying for.
+    </p>
+  </section>
 
-                <!-- Overlay -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <h3 class="text-white text-2xl font-bold text-center w-full">
-                        {{ category.name }}
-                    </h3>
-                </div>
-            </div>
-        }
+  <!-- ============ Toolbar ============ -->
+  <div class="toolbar">
+    <label class="cat-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M21 21l-4.35-4.35"></path>
+      </svg>
+      <input type="text" [(ngModel)]="query" placeholder="Search categories…" autocomplete="off" />
+      @if (query) {
+        <button type="button" class="clear-btn" (click)="clearQuery()" aria-label="Clear search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      }
+    </label>
+
+    <p class="count-line">
+      <strong>{{ filteredCategories.length }}</strong>
+      {{ filteredCategories.length === 1 ? 'category' : 'categories' }}
+      @if (query) { <span class="muted">of {{ categories.length }}</span> }
+    </p>
+  </div>
+
+  <!-- ============ Category grid ============ -->
+  @if (filteredCategories.length) {
+    <div class="category-grid">
+      @for (category of filteredCategories; track category.name) {
+        <button type="button" [class]="'cat-card ' + category.theme" (click)="openCategory()">
+          <span class="card-media">
+            <img [src]="category.image" [alt]="category.name" />
+            <span class="media-overlay" aria-hidden="true"></span>
+            <span class="cat-emoji">{{ category.emoji }}</span>
+            <span class="cat-count">{{ category.count }} gifts</span>
+          </span>
+
+          <span class="card-body">
+            <span class="cat-name">{{ category.name }}</span>
+            <span class="cat-tagline">{{ category.tagline }}</span>
+
+            <span class="card-foot">
+              <span class="from-price">
+                <span class="from-label">From</span>
+                {{ category.fromPrice.toFixed(3) }} KWD
+              </span>
+              <span class="go-arrow" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </span>
+          </span>
+        </button>
+      }
     </div>
+  } @else {
+    <div class="empty-state">
+      <span class="empty-emoji">🔍</span>
+      <h3>No categories match "{{ query }}"</h3>
+      <p>Try a different word — or browse all {{ categories.length }} categories.</p>
+      <button type="button" class="empty-btn" (click)="clearQuery()">Show all categories</button>
+    </div>
+  }
+
+  <!-- ============ Help band ============ -->
+  <section class="help-band">
+    <span class="band-glow" aria-hidden="true"></span>
+    <div class="band-copy">
+      <h2>Not sure where to start? 🤔</h2>
+      <p>Tell us the moment instead of the product — we'll match the gift to the occasion.</p>
+    </div>
+    <div class="band-actions">
+      <button type="button" class="band-btn-primary" (click)="browseOccasions()">Shop by occasion</button>
+      <button type="button" class="band-btn-ghost" (click)="openCategory()">See all gifts</button>
+    </div>
+  </section>
 </div>
