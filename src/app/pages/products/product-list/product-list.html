@@ -1,359 +1,231 @@
-<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-4">
-  <div class="max-[900px]:block hidden text-end pb-6">
-    <button (click)="toggleFilterModal()" class="p-2 rounded-full bg-gray-100 hover:bg-gray-300 transition">
-      <!-- Funnel Filter Icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" 
-          class="w-6 h-6 text-gray-700"
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor">
-        <path stroke-linecap="round" 
-              stroke-linejoin="round" 
-              stroke-width="2"
-              d="M3 4h18l-7 8v6l-4 2v-8L3 4z"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="grid grid-cols-1 min-[900px]:grid-cols-4 gap-8 items-start">
-
-    <!-- Left Sidebar: Sort & Filters -->
-    <div class="min-[900px]:col-span-1 hidden min-[900px]:block bg-white p-5 rounded-3xl shadow-md space-y-6 sticky top-24">
-      <div class="flex justify-end mb-1">
-        <button
-        (click)="clearAllFilters()"
-        class="text-sm text-[#6A1B4D] font-medium hover:underline cursor-pointer"
-      >
-        Clear All
+<!-- Shared filter groups: rendered into both the desktop sidebar and the mobile drawer -->
+<ng-template #filterGroupsTpl>
+  @for (group of filterGroups; track group.key) {
+    <div class="filter-group">
+      <button type="button" class="group-head" (click)="toggleSection(group.key)"
+        [attr.aria-expanded]="!collapse[group.key]">
+        <span class="group-title">{{ group.title }}</span>
+        @if (selected[group.key].length) {
+          <span class="group-count">{{ selected[group.key].length }}</span>
+        }
+        <svg class="group-chevron" [class.collapsed]="collapse[group.key]" width="16" height="16"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
       </button>
-      </div>
 
-      <!-- Sort By -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Sort By</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
-            Latest
+      <div class="group-body" [class.collapsed]="collapse[group.key]">
+        @for (option of group.options; track option) {
+          <label class="filter-option" [class.checked]="isSelected(group.key, option)">
+            <input type="checkbox" [checked]="isSelected(group.key, option)"
+              (change)="toggleOption(group.key, option)" />
+            <span class="checkbox-box">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+            <span class="option-label">{{ option }}</span>
+            <span class="option-count">{{ optionCount(group.key, option) }}</span>
           </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
-            Price: Low to High
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="sort" class="accent-[#6A1B4D] cursor-pointer"/>
-            Price: High to Low
-          </label>
-        </div>
+        }
       </div>
+    </div>
+  }
+</ng-template>
 
-      <!-- Filter by Category -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Category</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Toys
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Gadgets
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Books
-          </label>
-        </div>
-      </div>
+<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-10">
 
-      <!-- Filter by Discount -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Discount</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            0-25%
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            25-50%
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            50% & Above
-          </label>
-        </div>
-      </div>
+  <!-- ============ Page banner ============ -->
+  <section class="page-banner">
+    <span class="banner-glow" aria-hidden="true"></span>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">Gifts</span>
+    </nav>
+    <h1 class="banner-title">All Gifts 🎁</h1>
+    <p class="banner-sub">
+      {{ products.length }} hand-picked presents for every person and every occasion.
+    </p>
+  </section>
 
-      <!-- Filter by Age -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Age</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            0-6 yrs
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            6-18 yrs
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            18+ yrs
-          </label>
-        </div>
-      </div>
-
-      <!-- Filter by Gender -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Gender</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Men
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Women
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            Unisex
-          </label>
-        </div>
-      </div>
-
-      <!-- Filter by Price -->
-      <div>
-        <h2 class="font-semibold text-lg mb-3">Price</h2>
-        <div class="space-y-2">
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            0-5 KWD
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            5-10 KWD
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            10-20 KWD
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" class="accent-[#6A1B4D] cursor-pointer"/>
-            20 KWD+
-          </label>
-        </div>
-      </div>
-
+  <!-- ============ Toolbar ============ -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <p class="result-count">
+        <strong>{{ filteredProducts.length }}</strong>
+        {{ filteredProducts.length === 1 ? 'gift' : 'gifts' }}
+        @if (activeFilterCount) { <span class="muted">of {{ products.length }}</span> }
+      </p>
     </div>
 
-    <!-- Products Grid -->
-    <div class="min-[900px]:col-span-3 col-span-1 grid gap-4 sm:gap-6 grid-cols-2 min-[900px]:grid-cols-3">
-      <!-- Example product card -->
-      @for(product of products; track product){
-        <div class="group bg-white rounded-3xl shadow-md hover:shadow-2xl transition duration-300 border border-gray-100 overflow-hidden">
+    <div class="toolbar-right">
+      <!-- Mobile filter trigger -->
+      <button type="button" class="filter-trigger" (click)="toggleFilterModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 4h18l-7 8v6l-4 2v-8L3 4z" />
+        </svg>
+        Filters
+        @if (activeFilterCount) { <span class="trigger-badge">{{ activeFilterCount }}</span> }
+      </button>
 
-          <!-- Image -->
-          <div class="relative overflow-hidden">
-            <img [src]="product.image"
-                class="w-full h-42 sm:h-60 object-cover group-hover:scale-110 transition duration-500"/>
-            <span class="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full shadow">
-              {{ product.badge }}
-            </span>
-          </div>
+      <!-- Sort -->
+      <label class="sort-control">
+        <span class="sort-label">Sort</span>
+        <select [(ngModel)]="sortBy">
+          @for (opt of sortOptions; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </label>
+    </div>
+  </div>
 
-          <!-- Info -->
-          <div class="p-5">
-            <div class="min-h-[5rem]">
-              <h3 class="font-semibold text-lg text-gray-800 group-hover:text-black transition">
-                {{ product.name }}
-              </h3>
-              <div class="flex items-center gap-1 text-yellow-400 mt-2 text-sm">
-                ★ ★ ★ ★ ☆
+  <!-- Active filter chips -->
+  @if (activeFilterCount) {
+    <div class="chip-row">
+      @for (chip of activeChips; track chip.key + chip.value) {
+        <button type="button" class="chip" (click)="removeChip(chip)">
+          {{ chip.value }}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+      }
+      <button type="button" class="chip-clear" (click)="clearAllFilters()">Clear all</button>
+    </div>
+  }
+
+  <!-- ============ Body ============ -->
+  <div class="listing-layout">
+
+    <!-- Desktop sidebar -->
+    <aside class="filter-sidebar">
+      <div class="sidebar-head">
+        <h2>Filters</h2>
+        @if (activeFilterCount) {
+          <button type="button" class="clear-link" (click)="clearAllFilters()">Clear all</button>
+        }
+      </div>
+      <ng-container [ngTemplateOutlet]="filterGroupsTpl"></ng-container>
+    </aside>
+
+    <!-- Products -->
+    <div class="products-area">
+      @if (filteredProducts.length) {
+        <div class="product-grid">
+          @for (product of filteredProducts; track product.id) {
+            <article class="product-card" (click)="openProduct()">
+              <div class="card-image">
+                <img [src]="product.image" [alt]="product.name" />
+
+                @if (product.badge) {
+                  <span class="card-badge" [class]="'card-badge badge-' + product.badge.toLowerCase()">
+                    {{ product.badge }}
+                  </span>
+                }
+
+                @if (discountPercent(product)) {
+                  <span class="card-discount">-{{ discountPercent(product) }}%</span>
+                }
+
+                <button type="button" class="fav-btn" [class.active]="product.isFavorite"
+                  [attr.aria-label]="product.isFavorite ? 'Remove from wishlist' : 'Add to wishlist'"
+                  (click)="toggleFavorite(product, $event)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+
+                <span class="quick-view">View details</span>
               </div>
-            </div>
 
-            <div class="flex items-center gap-3 mt-4">
-              <span class="text-xl font-bold text-gray-900">${{ product.price }}</span>
-              <span class="text-sm text-gray-400 line-through">${{ product.oldPrice }}</span>
-            </div>
+              <div class="card-body">
+                <span class="card-category">{{ product.category }}</span>
+                <h3 class="card-name">{{ product.name }}</h3>
 
-            <button class="cursor-pointer mt-5 w-full py-2.5 rounded-xl bg-[#6A1B4D] text-white font-medium hover:bg-[#3B0F3D] transition active:scale-95">
-              Add to Cart
-            </button>
-          </div>
+                <div class="card-rating">
+                  <span class="stars">
+                    @for (star of stars; track star) {
+                      <svg width="12" height="12" viewBox="0 0 24 24" [class.dim]="star > product.rating" aria-hidden="true">
+                        <path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/>
+                      </svg>
+                    }
+                  </span>
+                  <span class="rating-value">{{ product.rating.toFixed(1) }}</span>
+                  <span class="rating-count">({{ product.reviews }})</span>
+                </div>
+
+                <div class="card-footer">
+                  <span class="price-block">
+                    <span class="price-now">{{ product.price.toFixed(3) }} KWD</span>
+                    @if (product.oldPrice) {
+                      <span class="price-was">{{ product.oldPrice.toFixed(3) }} KWD</span>
+                    }
+                  </span>
+                  <button type="button" class="cart-btn" aria-label="Add to cart"
+                    (click)="addToCart(product, $event)">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="9" cy="21" r="1"></circle>
+                      <circle cx="20" cy="21" r="1"></circle>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <!-- Empty state -->
+        <div class="empty-state">
+          <span class="empty-emoji">🎁</span>
+          <h3>No gifts match those filters</h3>
+          <p>Try removing a filter or two — there are {{ products.length }} gifts waiting.</p>
+          <button type="button" class="empty-btn" (click)="clearAllFilters()">Clear all filters</button>
         </div>
       }
     </div>
   </div>
+</div>
 
-<div
-  class="min-[900px]:hidden fixed inset-0 z-50 bg-black/50 flex justify-start transition-opacity duration-300 ease-in-out"
-  [class.opacity-0]="!showFilterModal"
-  [class.opacity-100]="showFilterModal"
-  [class.pointer-events-none]="!showFilterModal"
-  (click)="toggleFilterModal()"
->
-  <div 
-    class="bg-white w-80 h-full p-4 overflow-y-auto relative transform transition-transform duration-500 ease-in-out"
-    [class.translate-x-full]="!showFilterModal"
-    [class.translate-x-0]="showFilterModal"
-    [class.opacity-0]="hideFilterModal"
-    (click)="$event.stopPropagation()"
-  >
-    <!-- Close Button -->
-    <div class="flex justify-end mb-4">
-      <button (click)="toggleFilterModal()" class="text-gray-500 hover:text-gray-900 text-2xl font-bold">
-        ✕
-      </button>
-    </div>
+<!-- ============ Mobile filter drawer ============ -->
+<div class="drawer-backdrop" [class.open]="showFilterModal" (click)="closeFilterModal()" aria-hidden="true"></div>
 
-    <!-- ================== Sections ================== -->
-
-    <div class="flex justify-end mb-6">
-      <button
-      (click)="clearAllFilters()"
-      class="text-sm text-[#6A1B4D] font-medium hover:underline cursor-pointer"
-    >
-      Clear All
+<aside class="filter-drawer" [class.open]="showFilterModal">
+  <div class="drawer-head">
+    <h2>Filters</h2>
+    <button type="button" class="drawer-close" (click)="closeFilterModal()" aria-label="Close filters">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
     </button>
-    </div>
-
-    <!-- Sort By -->
-    <div class="border-b border-gray-300 pb-3 mb-3">
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('sort')">
-        <h2 class="font-semibold text-lg">Sort By</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.sort"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.sort ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Latest
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Price: Low to High
-        </label>
-        <label class="flex items-center gap-2 cursor-pointer">
-          <input type="radio" name="sort" class="accent-[#6A1B4D]"/> Price: High to Low
-        </label>
-      </div>
-    </div>
-
-    <!-- Category -->
-    <div class="border-b border-gray-300 pb-3 mb-3">
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('category')">
-        <h2 class="font-semibold text-lg">Category</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.category"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.category ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Toys</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Gadgets</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Books</label>
-      </div>
-    </div>
-
-    <!-- Discount -->
-    <div class="border-b border-gray-300 pb-3 mb-3">
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('discount')">
-        <h2 class="font-semibold text-lg">Discount</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.discount"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.discount ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-25%</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 25-50%</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 50% & Above</label>
-      </div>
-    </div>
-
-    <!-- Age -->
-    <div class="border-b border-gray-300 pb-3 mb-3">
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('age')">
-        <h2 class="font-semibold text-lg">Age</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.age"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.age ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-6 yrs</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 6-18 yrs</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 18+ yrs</label>
-      </div>
-    </div>
-
-    <!-- Gender -->
-    <div class="border-b border-gray-300 pb-3 mb-3">
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('gender')">
-        <h2 class="font-semibold text-lg">Gender</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.gender"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.gender ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Men</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Women</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> Unisex</label>
-      </div>
-    </div>
-
-    <!-- Price -->
-    <div>
-      <div class="flex justify-between items-center cursor-pointer" (click)="toggleSection('price')">
-        <h2 class="font-semibold text-lg">Price</h2>
-        <svg xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5 transform transition-transform duration-300"
-          [class.rotate-180]="collapse.price"
-          fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-      <div class="space-y-2 mt-2 overflow-hidden"
-           [style.maxHeight]="collapse.price ? '500px' : '0px'">
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 0-5 KWD</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 5-10 KWD</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 10-20 KWD</label>
-        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-[#6A1B4D]"/> 20 KWD+</label>
-      </div>
-    </div>
-
   </div>
-</div>
 
-</div>
+  <div class="drawer-body">
+    <!-- Sort -->
+    <div class="filter-group">
+      <span class="group-title block mb-2.5">Sort by</span>
+      <div class="sort-pills">
+        @for (opt of sortOptions; track opt.value) {
+          <button type="button" class="sort-pill" [class.active]="sortBy === opt.value"
+            (click)="sortBy = $any(opt.value)">
+            {{ opt.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <ng-container [ngTemplateOutlet]="filterGroupsTpl"></ng-container>
+  </div>
+
+  <div class="drawer-foot">
+    <button type="button" class="foot-clear" (click)="clearAllFilters()">Clear all</button>
+    <button type="button" class="foot-apply" (click)="closeFilterModal()">
+      Show {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'gift' : 'gifts' }}
+    </button>
+  </div>
+</aside>
