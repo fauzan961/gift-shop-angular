@@ -555,6 +555,15 @@
   gap: 0.65rem;
 }
 
+/* Below 1024px the sticky mobile bar carries the CTA, so hide the in-card
+   one — otherwise the cart shows two checkout buttons (checkout.css does the
+   same for .proceed-btn). */
+@media (max-width: 1023px) {
+  .checkout-btn {
+    display: none;
+  }
+}
+
 .next-note {
   margin-top: 0.7rem;
   text-align: center;
