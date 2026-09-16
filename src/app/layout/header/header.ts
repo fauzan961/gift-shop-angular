@@ -52,6 +52,10 @@ productSuggestions = [
     this.router.navigate(['/cart']);
   }
 
+  onWishlistClick() {
+    this.router.navigate(['/wishlist']);
+  }
+
   switchLanguage() {
     console.log('Language switch clicked');
     // Implement language switching between English and Arabic
