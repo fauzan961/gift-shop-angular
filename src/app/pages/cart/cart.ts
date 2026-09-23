@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 interface CartItem {
   id: number;
@@ -19,7 +20,7 @@ interface CartItem {
   styleUrl: './cart.css',
 })
 export class Cart {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthService) {}
 
   /** Placeholder commerce rules — wire these to your pricing service. */
   readonly deliveryFee = 2;
@@ -89,7 +90,10 @@ export class Cart {
   // ---------- Navigation ----------
 
   checkout(): void {
-    this.router.navigate(['/checkout/1']);
+    // Buying requires an account: sign in first, then resume to checkout.
+    this.auth.requireLogin('Please sign in to complete your order.', () =>
+      this.router.navigate(['/checkout/1'])
+    );
   }
 
   continueShopping(): void {

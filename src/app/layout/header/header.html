@@ -90,7 +90,8 @@
       </button>
 
       <!-- Dashboard Dropdown -->
-      <div class="relative group hidden md:block">
+      <div class="relative group hidden md:block" [class.dropdown-dismissed]="dropdownDismissed"
+        (mouseleave)="dropdownDismissed = false">
         <button class="nav-link flex items-center gap-1.5" type="button">
           Dashboard
           <svg class="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="none"
@@ -100,27 +101,34 @@
         </button>
 
         <div class="dropdown-menu">
-          <a routerLink="/wishlist" routerLinkActive="is-active" class="dropdown-item">
+          <a routerLink="/wishlist" routerLinkActive="is-active" class="dropdown-item"
+            (click)="dismissDropdown()">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
             Wishlist
           </a>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dropdown-item" (click)="dismissDropdown()">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
             </svg>
             My Orders
           </a>
-          <a href="#" class="dropdown-item danger">
+          @if (auth.isLoggedIn()) {
+            <p class="dropdown-user">
+              <span>Signed in as</span>
+              <strong>{{ auth.displayMobile() }}</strong>
+            </p>
+          }
+          <button type="button" class="dropdown-item danger" (click)="dismissDropdown(); onLogout()">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
             </svg>
-            Logout
-          </a>
+            {{ auth.isLoggedIn() ? 'Logout' : 'Sign in' }}
+          </button>
         </div>
       </div>
 
@@ -200,6 +208,13 @@
           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
       </svg>
       My account
+    </button>
+    <button (click)="closeMobileMenu(); auth.isLoggedIn() ? onLogout() : auth.openLogin()" class="drawer-action">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+      </svg>
+      {{ auth.isLoggedIn() ? 'Sign out' : 'Sign in' }}
     </button>
     <button (click)="onWishlistClick(); closeMobileMenu()" class="drawer-action">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

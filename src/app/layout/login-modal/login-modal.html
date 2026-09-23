@@ -1,0 +1,148 @@
+@if (auth.modalOpen()) {
+  <div class="login-backdrop" (click)="close()" aria-hidden="true"></div>
+
+  <div class="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title">
+    <span class="modal-glow" aria-hidden="true"></span>
+
+    @if (step !== 'done') {
+      <button type="button" class="modal-close" (click)="close()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    }
+
+    <!-- ============ Step 1: mobile ============ -->
+    @if (step === 'mobile') {
+      <div class="modal-body">
+        <span class="modal-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="2" width="12" height="20" rx="3" />
+            <path d="M11 18h2" />
+          </svg>
+        </span>
+
+        <h2 class="modal-title" id="login-title">Sign in to continue</h2>
+        <p class="modal-sub">
+          @if (auth.modalReason()) {
+            {{ auth.modalReason() }}
+          } @else {
+            Enter your mobile number and we'll text you a verification code.
+          }
+        </p>
+
+        <label class="field-label" for="login-mobile">Mobile number</label>
+        <div class="phone-field" [class.has-error]="mobileInvalid">
+          <span class="country-code">{{ countryCode }}</span>
+          <input
+            id="login-mobile"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            [attr.maxlength]="mobileLength"
+            placeholder="5123 4567"
+            [formControl]="mobile"
+            (input)="onMobileInput($event)"
+            (keyup.enter)="sendOtp()" />
+        </div>
+
+        @if (mobileInvalid) {
+          <p class="field-error">Enter a valid {{ mobileLength }}-digit Kuwait mobile number</p>
+        }
+        @if (error) {
+          <p class="field-error">{{ error }}</p>
+        }
+
+        <button type="button" class="primary-btn" [disabled]="busy" (click)="sendOtp()">
+          @if (busy) {
+            <span class="spinner" aria-hidden="true"></span>
+            Sending code…
+          } @else {
+            Send code
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          }
+        </button>
+
+        <p class="legal">
+          By continuing you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </div>
+    }
+
+    <!-- ============ Step 2: OTP ============ -->
+    @if (step === 'otp') {
+      <div class="modal-body">
+        <span class="modal-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16v12H5.5L4 18z" />
+            <path d="M8 9h8M8 12h5" />
+          </svg>
+        </span>
+
+        <h2 class="modal-title" id="login-title">Enter the code</h2>
+        <p class="modal-sub">
+          Sent to <strong>{{ countryCode }} {{ auth.otpMobile }}</strong>
+          <button type="button" class="link-btn" (click)="changeNumber()">Change</button>
+        </p>
+
+        <div class="otp-row" (paste)="$event.stopPropagation()">
+          @for (i of otpBoxes; track i) {
+            <input
+              #otpBox
+              class="otp-box"
+              [class.filled]="otp[i]"
+              [class.has-error]="error"
+              type="text"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              maxlength="1"
+              [attr.aria-label]="'Digit ' + (i + 1)"
+              (input)="onOtpInput(i, $event)"
+              (keydown)="onOtpKeydown(i, $event)" />
+          }
+        </div>
+
+        @if (error) {
+          <p class="field-error center">{{ error }}</p>
+        }
+
+        @if (showDemoHint) {
+          <p class="demo-hint">Demo build — no SMS is sent. Use code <strong>1234</strong>.</p>
+        }
+
+        <button type="button" class="primary-btn" [disabled]="!otpComplete || busy" (click)="verify()">
+          @if (busy) {
+            <span class="spinner" aria-hidden="true"></span>
+            Verifying…
+          } @else {
+            Verify &amp; continue
+          }
+        </button>
+
+        <p class="resend">
+          @if (resendIn > 0) {
+            Resend code in <strong>{{ resendIn }}s</strong>
+          } @else {
+            Didn't get it?
+            <button type="button" class="link-btn" [disabled]="busy" (click)="resend()">Resend code</button>
+          }
+        </p>
+      </div>
+    }
+
+    <!-- ============ Step 3: success ============ -->
+    @if (step === 'done') {
+      <div class="modal-body success">
+        <span class="success-mark" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </span>
+        <h2 class="modal-title" id="login-title">You're signed in</h2>
+        <p class="modal-sub">Taking you back to what you were doing…</p>
+      </div>
+    }
+  </div>
+}

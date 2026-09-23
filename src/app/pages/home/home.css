@@ -270,6 +270,12 @@
   animation: hero-rise 0.7s 0.12s ease both;
 }
 
+@media (max-width: 639px) {
+  .hero-collage {
+    display: none;
+  }
+}
+
 @media (min-width: 640px) {
   .hero-collage {
     height: 24rem;

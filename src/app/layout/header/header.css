@@ -36,13 +36,13 @@
 }
 
 .nav-logo img {
-  height: 3.25rem;
+  height: 4.25rem;
   width: auto;
 }
 
 @media (max-width: 640px) {
   .nav-logo img {
-    height: 2.8rem;
+    height: 3.8rem;
   }
 }
 
@@ -364,6 +364,12 @@
   transform: translateY(0);
 }
 
+.group.dropdown-dismissed .dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.4rem);
+}
+
 .dropdown-item {
   display: flex;
   align-items: center;
@@ -379,6 +385,36 @@
 .dropdown-item:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #F2A9D0;
+}
+
+.dropdown-user {
+  padding: 0.5rem 0.8rem 0.6rem;
+  margin-bottom: 0.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  line-height: 1.35;
+}
+
+.dropdown-user span {
+  display: block;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.dropdown-user strong {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #F2A9D0;
+}
+
+/* Logout is a <button> now, so it needs the anchor's box model */
+button.dropdown-item {
+  width: 100%;
+  border: none;
+  background: none;
+  text-align: left;
+  font: inherit;
 }
 
 .dropdown-item.danger:hover {

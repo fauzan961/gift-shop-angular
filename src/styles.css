@@ -39,3 +39,7 @@ body{
      font-size: 1rem;
     }
 }
+
+body:has(.mobile-bar) app-footer .footer-inner {
+  padding-bottom: 5.5rem;
+}

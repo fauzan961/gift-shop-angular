@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 
@@ -12,12 +13,11 @@ import { HostListener } from '@angular/core';
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(private router: Router){}
+  constructor(private router: Router, public auth: AuthService){}
 
   cartItemCount = 0;
   isMobileMenuOpen = false;
-  isDropdownOpen = false;
-  isHovering = false;
+  dropdownDismissed = false;
   searchQuery = '';
   isSearchOpen = false;
   isScrolled = false;
@@ -40,12 +40,17 @@ productSuggestions = [
 
   onSearch() {
     console.log('Search clicked');
-    // Implement search functionality
   }
 
   onAccountClick() {
-    console.log('Account clicked');
-    // Navigate to account page or show login modal
+    if (this.auth.isLoggedIn()) this.router.navigate(['/wishlist']);
+    else this.auth.openLogin();
+  }
+
+  onLogout() {
+    this.auth.logout();
+    this.dropdownDismissed = true;
+    this.router.navigate(['/home']);
   }
 
   onCartClick() {
@@ -56,9 +61,13 @@ productSuggestions = [
     this.router.navigate(['/wishlist']);
   }
 
+  dismissDropdown(): void {
+    this.dropdownDismissed = true;
+    (document.activeElement as HTMLElement | null)?.blur();
+  }
+
   switchLanguage() {
     console.log('Language switch clicked');
-    // Implement language switching between English and Arabic
   }
 
   toggleMobileMenu() {
@@ -82,7 +91,6 @@ productSuggestions = [
 
   onSearchInput(): void {
   this.isSearchOpen = this.searchQuery.trim().length > 0;
-  // TODO: replace popularSuggestions/productSuggestions with a live call to your search service, debounced
 }
 
 onSearchFocus(): void {
@@ -101,12 +109,10 @@ selectSuggestion(term: string): void {
 
 selectProduct(product: any): void {
   this.isSearchOpen = false;
-  // navigate to product page
 }
 
 showMoreResults(): void {
   this.isSearchOpen = false;
-  // navigate to /search?q=... with searchQuery
 }
 
 @HostListener('document:click')
