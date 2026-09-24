@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { ProfileService } from '../../services/profile';
 import { FormsModule } from '@angular/forms';
 import { HostListener } from '@angular/core';
 
@@ -13,7 +14,7 @@ import { HostListener } from '@angular/core';
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(private router: Router, public auth: AuthService){}
+  constructor(private router: Router, public auth: AuthService, public profiles: ProfileService){}
 
   cartItemCount = 0;
   isMobileMenuOpen = false;
@@ -43,7 +44,7 @@ productSuggestions = [
   }
 
   onAccountClick() {
-    if (this.auth.isLoggedIn()) this.router.navigate(['/wishlist']);
+    if (this.auth.isLoggedIn()) this.router.navigate(['/account']);
     else this.auth.openLogin();
   }
 
