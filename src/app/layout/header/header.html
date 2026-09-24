@@ -109,7 +109,7 @@
             </svg>
             Wishlist
           </a>
-          <a href="#" class="dropdown-item" (click)="dismissDropdown()">
+          <a routerLink="/orders" routerLinkActive="is-active" class="dropdown-item" (click)="dismissDropdown()">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -215,6 +215,13 @@
           d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
       </svg>
       {{ auth.isLoggedIn() ? 'Sign out' : 'Sign in' }}
+    </button>
+    <button (click)="onOrdersClick(); closeMobileMenu()" class="drawer-action">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+      </svg>
+      My orders
     </button>
     <button (click)="onWishlistClick(); closeMobileMenu()" class="drawer-action">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

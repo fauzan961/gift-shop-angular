@@ -10,6 +10,11 @@ export const routes: Routes = [
   { path: 'categories', loadComponent: () => import('./pages/categories/categories').then(m => m.Categories) },
   { path: 'wishlist', loadComponent: () => import('./pages/wishlist/wishlist').then(m => m.Wishlist) },
   { path: 'cart', loadComponent: () => import('./pages/cart/cart').then(m => m.Cart) },
-  { path: 'checkout/:id', canActivate: [authGuard], loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout) },
+  { path: 'orders', canActivate: [authGuard],
+    data: { authReason: 'Sign in to see your orders.', authFallback: '/home' },
+    loadComponent: () => import('./pages/orders/orders').then(m => m.Orders) },
+  { path: 'checkout/:id', canActivate: [authGuard],
+    data: { authReason: 'Please sign in to complete your order.', authFallback: '/cart' },
+    loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout) },
   { path: '**', redirectTo: 'home' }
 ];

@@ -98,7 +98,6 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  /* room so the hover lift and shadow are not clipped by overflow */
   padding: 1.25rem 0.25rem 1.5rem;
   margin: 0 -0.25rem;
 }
@@ -346,7 +345,7 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (min-width: 640px) and (max-width: 768px) {
   .gift-card {
     min-width: 225px;
     max-width: 225px;
@@ -357,17 +356,38 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 639px) {
   .gift-card {
-    min-width: 200px;
-    max-width: 200px;
+    flex: 0 0 calc((100% - 1.25rem) / 2);
+    min-width: 0;
+    max-width: none;
   }
 
   .gift-image {
-    height: 185px;
+    height: 9.5rem;
   }
+}
 
+@media (max-width: 480px) {
   .view-all-btn {
     display: none;
+  }
+}
+
+@media (max-width: 479px) {
+  .gift-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+  }
+
+  .price-now {
+    white-space: nowrap;
+  }
+
+  .buy-btn {
+    width: 100%;
+    height: 2.3rem;
+    border-radius: 0.75rem;
   }
 }

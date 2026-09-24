@@ -61,6 +61,10 @@ productSuggestions = [
     this.router.navigate(['/wishlist']);
   }
 
+  onOrdersClick() {
+    this.router.navigate(['/orders']);
+  }
+
   dismissDropdown(): void {
     this.dropdownDismissed = true;
     (document.activeElement as HTMLElement | null)?.blur();

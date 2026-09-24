@@ -1,0 +1,212 @@
+<div class="orders-page max-w-[1400px] mx-auto px-3 sm:px-5 pt-24 pb-10">
+
+  <!-- ============ Banner ============ -->
+  <section class="page-banner">
+    <span class="banner-glow" aria-hidden="true"></span>
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="current">My Orders</span>
+    </nav>
+
+    <h1 class="banner-title">
+      My Orders
+      @if (orders.length) {
+        <span class="title-count">{{ orders.length }} total</span>
+      }
+    </h1>
+
+    <p class="banner-sub">Track what's on its way and reorder the gifts that landed well.</p>
+  </section>
+
+  @if (orders.length) {
+    <!-- ============ Filters ============ -->
+    <div class="filter-row" role="tablist" aria-label="Filter orders by status">
+      @for (f of filters; track f.key) {
+        <button type="button" class="filter-chip" [class.is-active]="activeFilter === f.key"
+          role="tab" [attr.aria-selected]="activeFilter === f.key" (click)="setFilter(f.key)">
+          {{ f.label }}
+          <span class="chip-count">{{ countFor(f.key) }}</span>
+        </button>
+      }
+    </div>
+
+    @if (filteredOrders.length) {
+      <!-- ============ Orders ============ -->
+      <div class="orders-list">
+        @for (order of filteredOrders; track order.id) {
+          <article class="order-card" [class]="'order-card status-' + order.status">
+
+            <!-- Head -->
+            <header class="order-head">
+              <div class="head-main">
+                <span class="order-id">{{ order.id }}</span>
+                <span class="order-date">Placed {{ order.placedOn }}</span>
+              </div>
+
+              <span class="status-badge">
+                @if (order.status === 'delivered') {
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                } @else if (order.status === 'cancelled') {
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                } @else {
+                  <span class="pulse" aria-hidden="true"></span>
+                }
+                {{ statusLabel(order.status) }}
+              </span>
+            </header>
+
+            <!-- Tracker -->
+            @if (order.status !== 'cancelled') {
+              <div class="tracker" [attr.aria-label]="'Status: ' + statusLabel(order.status)">
+                <div class="track-rail">
+                  <span class="track-fill" [style.width.%]="trackProgress(order)"></span>
+                </div>
+                <ol class="track-steps">
+                  @for (step of steps; track step.key; let i = $index) {
+                    <li class="track-step" [class.done]="isStepDone(order, i)"
+                      [class.current]="isStepCurrent(order, i)">
+                      <span class="step-dot">
+                        @if (isStepDone(order, i)) {
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        }
+                      </span>
+                      <span class="step-label">{{ step.label }}</span>
+                    </li>
+                  }
+                </ol>
+              </div>
+            }
+
+            <!-- Summary row -->
+            <div class="order-body">
+              <div class="thumbs" [attr.aria-label]="itemCount(order) + ' items'">
+                @for (item of order.items.slice(0, 3); track item.name) {
+                  <img class="thumb" [src]="item.image" [alt]="item.name" />
+                }
+                @if (order.items.length > 3) {
+                  <span class="thumb more">+{{ order.items.length - 3 }}</span>
+                }
+              </div>
+
+              <div class="body-meta">
+                <p class="meta-when">{{ order.when }}</p>
+                <p class="meta-sub">
+                  {{ itemCount(order) }} {{ itemCount(order) === 1 ? 'item' : 'items' }}
+                  · for {{ order.recipient }}
+                </p>
+              </div>
+
+              <div class="body-total">
+                <span class="total-label">Total</span>
+                <span class="total-value">{{ total(order).toFixed(3) }} KWD</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <footer class="order-actions">
+              <button type="button" class="ghost-btn" (click)="toggle(order)"
+                [attr.aria-expanded]="isExpanded(order)">
+                {{ isExpanded(order) ? 'Hide details' : 'View details' }}
+                <svg class="chevron" [class.flipped]="isExpanded(order)" width="14" height="14"
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              @if (order.status === 'delivered' || order.status === 'cancelled') {
+                <button type="button" class="solid-btn" (click)="reorder(order, $event)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 1 0 3-6.7" />
+                    <polyline points="3 4 3 9 8 9" />
+                  </svg>
+                  Order again
+                </button>
+              }
+            </footer>
+
+            <!-- Details -->
+            @if (isExpanded(order)) {
+              <div class="order-details">
+                <ul class="detail-items">
+                  @for (item of order.items; track item.name) {
+                    <li>
+                      <span class="di-thumb">
+                        <img [src]="item.image" [alt]="item.name" />
+                        <span class="di-qty">{{ item.qty }}</span>
+                      </span>
+                      <span class="di-text">
+                        <span class="di-cat">{{ item.category }}</span>
+                        <span class="di-name">{{ item.name }}</span>
+                      </span>
+                      <span class="di-price">{{ (item.price * item.qty).toFixed(3) }} KWD</span>
+                    </li>
+                  }
+                </ul>
+
+                <div class="detail-grid">
+                  <div class="detail-block">
+                    <h3>Delivered to</h3>
+                    <p>{{ order.recipient }}</p>
+                    <p class="muted">{{ order.address }}</p>
+                  </div>
+
+                  <div class="detail-block">
+                    <h3>Payment</h3>
+                    <p>{{ order.payment }}</p>
+                  </div>
+
+                  <dl class="detail-totals">
+                    <div>
+                      <dt>Subtotal</dt>
+                      <dd>{{ subtotal(order).toFixed(3) }} KWD</dd>
+                    </div>
+                    <div>
+                      <dt>Delivery</dt>
+                      <dd>
+                        @if (order.delivery === 0) {
+                          <span class="free-tag">Free</span>
+                        } @else {
+                          {{ order.delivery.toFixed(3) }} KWD
+                        }
+                      </dd>
+                    </div>
+                    <div class="grand">
+                      <dt>Total</dt>
+                      <dd>{{ total(order).toFixed(3) }} KWD</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            }
+          </article>
+        }
+      </div>
+
+    } @else {
+      <!-- No match for this filter -->
+      <div class="empty-state">
+        <span class="empty-emoji">🔍</span>
+        <h2>Nothing here right now</h2>
+        <p>You have no {{ statusLabel($any(activeFilter)).toLowerCase() }} orders.</p>
+        <button type="button" class="empty-btn" (click)="setFilter('all')">Show all orders</button>
+      </div>
+    }
+
+  } @else {
+    <!-- No orders at all -->
+    <div class="empty-state">
+      <span class="empty-emoji">📦</span>
+      <h2>No orders yet</h2>
+      <p>When you send your first gift, you'll be able to track it here.</p>
+      <button type="button" class="empty-btn" (click)="browseGifts()">Browse gifts</button>
+    </div>
+  }
+</div>
