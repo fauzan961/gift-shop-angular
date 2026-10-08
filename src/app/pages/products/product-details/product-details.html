@@ -1,101 +1,325 @@
-<div class="max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
+<div class="pd-page max-w-[1400px] mx-auto px-3 sm:px-5 pt-24">
 
-  <!-- Product Section -->
-  <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+  <!-- ============ Breadcrumb ============ -->
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a routerLink="/home">Home</a>
+    <span aria-hidden="true">/</span>
+    <a routerLink="/products">Gifts</a>
+    <span aria-hidden="true">/</span>
+    <a routerLink="/categories">{{ product.category }}</a>
+    <span aria-hidden="true">/</span>
+    <span class="current">{{ product.name }}</span>
+  </nav>
 
-    <!-- Image Gallery -->
-    <div>
-      <img [src]="product.image" alt="product" class="w-full h-[350px] md:h-[450px] object-cover rounded-2xl shadow">
+  <!-- ============ Hero: gallery + buy box ============ -->
+  <section class="pd-hero">
 
-      <div class="flex gap-3 mt-4 overflow-x-auto">
-        <img *ngFor="let img of product.images"
-             [src]="img"
-             class="w-20 h-20 object-cover rounded-xl cursor-pointer border hover:scale-105 transition" />
+    <!-- Gallery -->
+    <div class="gallery">
+      <div class="stage">
+        @for (img of product.images; track img.src; let i = $index) {
+          <img class="stage-img" [class.is-active]="i === activeImage" [src]="img.src" [alt]="img.alt"
+            [attr.aria-hidden]="i !== activeImage" />
+        }
+
+        @if (discountPercent) {
+          <span class="sale-flag">-{{ discountPercent }}%</span>
+        }
+
+        <button type="button" class="stage-fav" [class.active]="isFavorite" (click)="toggleFavorite()"
+          [attr.aria-pressed]="isFavorite" [attr.aria-label]="isFavorite ? 'Remove from wishlist' : 'Add to wishlist'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+
+        <button type="button" class="stage-nav prev" (click)="prevImage()" aria-label="Previous image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="stage-nav next" (click)="nextImage()" aria-label="Next image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <span class="stage-count">{{ activeImage + 1 }} / {{ product.images.length }}</span>
       </div>
-    </div>
 
-    <!-- Product Info -->
-    <div class="flex flex-col justify-between">
-      <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">{{ product.name }}</h1>
-
-        <!-- Price -->
-        <p class="text-2xl text-pink-600 font-semibold mt-3">{{ product.price }}</p>
-
-        <!-- Rating -->
-        <div class="flex items-center gap-1 mt-2">
-            @for(star of [1,2,3,4,5]; track star){
-                <span class="text-yellow-400 text-lg">
-                    {{ star <= product.rating ? '★' : '☆' }}
-                </span>
-            }
-          <span class="text-sm text-gray-500 ml-2">({{ product.reviews.length }} reviews)</span>
-        </div>
-
-        <hr class="my-5 border-gray-200">
-
-        <!-- Description -->
-        <p class="text-gray-600 mt-4 leading-relaxed">
-          {{ product.description }}
-        </p>
-
-        <!-- Quantity + Cart -->
-        <div class="flex flex-col min-[350px]:flex-row gap-4 mt-6 items-start min-[350px]:items-center">
-          <div class="flex items-center border rounded-xl overflow-hidden">
-            <button (click)="decreaseQty()" class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-gray-200">-</button>
-            <span class="px-5">{{ quantity }}</span>
-            <button (click)="increaseQty()" class="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-gray-200">+</button>
-          </div>
-
-          <button (click)="addToCart()"
-                  class="bg-[#6A1B4D] hover:bg-[#3B0F3D] cursor-pointer text-white px-6 py-3 rounded-xl shadow transition w-full min-[350px]:w-auto">
-            Add to Cart
+      <div class="thumbs" role="tablist" aria-label="Product images">
+        @for (img of product.images; track img.src; let i = $index) {
+          <button type="button" class="thumb" [class.is-active]="i === activeImage" (click)="selectImage(i)"
+            role="tab" [attr.aria-selected]="i === activeImage" [attr.aria-label]="'Show ' + img.alt">
+            <img [src]="img.src" [alt]="" />
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reviews Section -->
-  <div class="max-w-7xl mx-auto mt-10 bg-white p-6 md:p-10 rounded-2xl shadow">
-    <h2 class="text-xl md:text-2xl font-bold mb-6">Customer Reviews</h2>
-
-    <div class="h-[500px] overflow-y-auto overflow-x-hidden pr-4">
-      <div *ngFor="let review of product.reviews; let last = last" [ngClass]="last ? 'pt-4' : 'py-4'">
-        <div class="flex justify-between items-center">
-          <h3 class="font-semibold">{{ review.name }}</h3>
-          <div class="text-yellow-400">
-            @for(star of [1,2,3,4,5]; track star){
-              {{ star <= review.rating ? '★' : '☆' }}
-            }
-          </div>
-        </div>
-        <p class="text-gray-600 break-words mt-2 w-3/4">{{ review.comment }}</p>
-        @if(!last){
-          <hr class="mt-4 border-gray-200">
         }
       </div>
     </div>
-  </div>
 
-  <!-- Related Products -->
-  <div class="max-w-7xl mx-auto mt-10">
-    <h2 class="text-xl md:text-2xl font-bold mb-6">Related Products</h2>
+    <!-- Buy box -->
+    <div class="buy-box">
+      <span class="kicker">{{ product.category }}</span>
+      <h1 class="pd-title">{{ product.name }}</h1>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-      <div *ngFor="let item of relatedProducts"
-           class="bg-white p-4 rounded-2xl shadow hover:shadow-xl transition cursor-pointer">
+      <button type="button" class="rating-row" (click)="scrollToReviews()">
+        <span class="stars" aria-hidden="true">
+          @for (s of stars; track s) {
+            <span class="star" [style.width.px]="16" [style.height.px]="16">
+              <svg class="star-base" width="16" height="16" viewBox="0 0 24 24"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/></svg>
+              <span class="star-fill" [style.width.%]="starFill(s, averageRating)">
+                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/></svg>
+              </span>
+            </span>
+          }
+        </span>
+        <strong>{{ averageRating.toFixed(1) }}</strong>
+        <span class="rating-link">{{ reviews.length }} reviews</span>
+      </button>
 
-        <img [src]="item.image" class="w-full h-40 object-cover rounded-xl">
+      <div class="price-block">
+        <span class="price-now">{{ product.price.toFixed(3) }} <small>KWD</small></span>
+        @if (product.oldPrice) {
+          <span class="price-was">{{ product.oldPrice.toFixed(3) }} KWD</span>
+          <span class="save-pill">Save {{ savings.toFixed(3) }} KWD</span>
+        }
+      </div>
 
-        <h3 class="mt-3 font-semibold text-gray-700">{{ item.name }}</h3>
-        <p class="text-pink-600 font-bold">{{ item.price  }}</p>
+      <p class="summary">{{ product.summary }}</p>
 
-        <button class="bg-[#6A1B4D] hover:bg-[#3B0F3D] text-white cursor-pointer mt-3 w-full py-2 rounded-lg text-sm">
-          View
+      <div class="perfect-for">
+        <span class="pf-label">Perfect for</span>
+        <div class="pf-chips">
+          @for (o of product.occasions; track o) {
+            <a routerLink="/occasion" class="pf-chip">{{ o }}</a>
+          }
+        </div>
+      </div>
+
+      <!-- Stock -->
+      <p class="stock" [class.low]="lowStock" [class.out]="!inStock">
+        <span class="stock-dot" aria-hidden="true"></span>
+        @if (!inStock) {
+          Out of stock
+        } @else if (lowStock) {
+          Only {{ product.stock }} left — order soon
+        } @else {
+          In stock
+        }
+      </p>
+
+      <!-- Quantity + actions -->
+      <div class="buy-row">
+        <div class="qty" role="group" aria-label="Quantity">
+          <button type="button" (click)="decreaseQty()" [disabled]="quantity <= 1" aria-label="Decrease quantity">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14" /></svg>
+          </button>
+          <span class="qty-value" aria-live="polite">{{ quantity }}</span>
+          <button type="button" (click)="increaseQty()" [disabled]="quantity >= maxQty" aria-label="Increase quantity">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14" /></svg>
+          </button>
+        </div>
+
+        <button type="button" class="add-btn" [class.is-added]="added" [disabled]="!inStock" (click)="addToCart()">
+          @if (added) {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Added to cart
+          } @else {
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            Add to cart · {{ lineTotal.toFixed(3) }} KWD
+          }
         </button>
       </div>
-    </div>
-  </div>
 
+      @if (quantity >= maxQty && inStock) {
+        <p class="qty-note">That's the most you can add for this item.</p>
+      }
+
+      <!-- Delivery promise -->
+      <ul class="promises">
+        <li>
+          <span class="promise-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13" rx="1" /><path d="M16 8h4l3 3v5h-7z" />
+              <circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </span>
+          <span>
+            <strong>{{ deliveryLine }}</strong>
+            <small>Same-day delivery across Kuwait</small>
+          </span>
+        </li>
+        <li>
+          <span class="promise-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+            </svg>
+          </span>
+          <span>
+            <strong>Free gift wrap &amp; handwritten card</strong>
+            <small>Add your message at checkout</small>
+          </span>
+        </li>
+        <li>
+          <span class="promise-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" />
+            </svg>
+          </span>
+          <span>
+            <strong>Free delivery over {{ freeDeliveryFrom }}.000 KWD</strong>
+            <small>Secure payment with Knet, cards &amp; Apple Pay</small>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ Reviews ============ -->
+  <section class="pd-reviews" #reviewsSection id="reviews">
+    <div class="section-head">
+      <span class="eyebrow">What gifters say</span>
+      <h2>Customer reviews</h2>
+    </div>
+
+    <div class="reviews-layout">
+      <!-- Summary -->
+      <aside class="review-summary">
+        <span class="big-rating">{{ averageRating.toFixed(1) }}</span>
+        <span class="stars large" aria-hidden="true">
+          @for (s of stars; track s) {
+            <span class="star" [style.width.px]="20" [style.height.px]="20">
+              <svg class="star-base" width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/></svg>
+              <span class="star-fill" [style.width.%]="starFill(s, averageRating)">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/></svg>
+              </span>
+            </span>
+          }
+        </span>
+        <span class="based-on">Based on {{ reviews.length }} reviews</span>
+
+        <ul class="breakdown">
+          @for (row of ratingBreakdown; track row.star) {
+            <li>
+              <span class="bd-star">{{ row.star }}★</span>
+              <span class="bd-track"><span class="bd-fill" [style.width.%]="row.percent"></span></span>
+              <span class="bd-count">{{ row.count }}</span>
+            </li>
+          }
+        </ul>
+      </aside>
+
+      <!-- List -->
+      <div class="review-list">
+        @for (r of visibleReviews; track r.name + r.date) {
+          <article class="review">
+            <header>
+              <span class="rv-avatar" aria-hidden="true">{{ initials(r.name) }}</span>
+              <span class="rv-who">
+                <strong>{{ r.name }}</strong>
+                <small>
+                  {{ r.date }}
+                  @if (r.verified) { <span class="verified">· Verified purchase</span> }
+                </small>
+              </span>
+              <span class="stars small" [attr.aria-label]="r.rating + ' out of 5'">
+                @for (s of stars; track s) {
+                  <svg width="13" height="13" viewBox="0 0 24 24" [class.dim]="s > r.rating" aria-hidden="true">
+                    <path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/>
+                  </svg>
+                }
+              </span>
+            </header>
+            <p>{{ r.comment }}</p>
+          </article>
+        }
+
+        @if (hiddenReviewCount) {
+          <button type="button" class="more-btn" (click)="toggleReviews()">
+            {{ showAllReviews ? 'Show fewer reviews' : 'Show all ' + reviews.length + ' reviews' }}
+            <svg [class.flipped]="showAllReviews" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Related ============ -->
+  <section class="pd-related">
+    <div class="section-head row">
+      <div>
+        <span class="eyebrow">Pairs beautifully with</span>
+        <h2>You may also like</h2>
+      </div>
+      <a routerLink="/products" class="view-all">
+        View all
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <div class="related-grid">
+      @for (item of related; track item.slug) {
+        <article class="rel-card" (click)="openRelated(item)">
+          <div class="rel-image">
+            <img [src]="item.image" [alt]="item.name" />
+            <button type="button" class="rel-fav" [class.active]="item.isFavorite"
+              (click)="toggleRelatedFavorite(item, $event)" [attr.aria-label]="'Save ' + item.name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="rel-body">
+            <span class="kicker small">{{ item.category }}</span>
+            <h3>{{ item.name }}</h3>
+            <span class="rel-rating">
+              <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2l2.9 6.26 6.6.72-4.95 4.6 1.36 6.42L12 16.8l-5.91 3.2 1.36-6.42L2.5 8.98l6.6-.72z"/>
+              </svg>
+              {{ item.rating.toFixed(1) }} <small>({{ item.reviews }})</small>
+            </span>
+            <div class="rel-foot">
+              <span class="rel-price">
+                {{ item.price.toFixed(3) }} KWD
+                @if (item.oldPrice) { <s>{{ item.oldPrice.toFixed(3) }}</s> }
+              </span>
+              <button type="button" class="rel-cart" [class.is-added]="relatedAdded.has(item.slug)"
+                (click)="addRelated(item, $event)" [attr.aria-label]="'Add ' + item.name + ' to cart'">
+                @if (relatedAdded.has(item.slug)) {
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                } @else {
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- ============ Mobile buy bar ============ -->
+  <div class="mobile-bar">
+    <div class="bar-price">
+      <span class="bar-label">{{ quantity }} × {{ product.price.toFixed(3) }}</span>
+      <span class="bar-value">{{ lineTotal.toFixed(3) }} KWD</span>
+    </div>
+    <button type="button" class="bar-btn" [class.is-added]="added" [disabled]="!inStock" (click)="addToCart()">
+      @if (added) { Added ✓ } @else { Add to cart }
+    </button>
+  </div>
 </div>

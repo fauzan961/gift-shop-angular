@@ -40,6 +40,8 @@ body{
     }
 }
 
-body:has(.mobile-bar) app-footer .footer-inner {
-  padding-bottom: 5.5rem;
+@media (max-width: 1023px) {
+  body:has(.mobile-bar) app-footer .footer-inner {
+    padding-bottom: 5.5rem;
+  }
 }
