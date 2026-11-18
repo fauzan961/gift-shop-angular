@@ -11,7 +11,7 @@ export const MOBILE_PATTERN = /^[569]\d{7}$/;
 export const OTP_LENGTH = 4;
 export const RESEND_SECONDS = 30;
 const DEMO_OTP = '1234';
-const STORAGE_KEY = 'mawada.auth.user';
+const STORAGE_KEY = 'giftie.auth.user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

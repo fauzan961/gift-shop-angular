@@ -203,7 +203,6 @@ export class ProductDetails implements OnInit, OnDestroy {
 
   openRelated(item: RelatedProduct): void {
     this.router.navigate(['/product', item.slug]);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   addRelated(item: RelatedProduct, event: Event): void {

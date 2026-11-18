@@ -120,7 +120,7 @@ export class ProfileService {
   }
 
   private key(mobile: string): string {
-    return `mawada.profile.${mobile}`;
+    return `giftie.profile.${mobile}`;
   }
 
   private load(mobile: string): Profile {
